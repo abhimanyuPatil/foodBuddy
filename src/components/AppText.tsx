@@ -92,13 +92,14 @@ const styles: ITypography = {
   }),
   bold: (theme: any) => ({
     fontSize: theme.fontSizes.base,
+    fontWeight:'bold'
     // ...getFontStyleObject({ family: 'Lato', weight: 'Bold' }),
   }),
   primary: (theme: any) => ({
     color: theme.colors.blue,
   }),
   theme: (theme: any) => ({
-    color: theme.colors.primary,
+    color: theme.colors.theme,
   }),
   secondary: (theme: any) => ({
     color: theme.colors.secondary,

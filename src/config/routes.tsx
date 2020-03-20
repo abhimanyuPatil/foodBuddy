@@ -6,14 +6,15 @@ import {
 import Home from '../screens/Home'
 import { createStackNavigator } from 'react-navigation-stack';
 import Login from '../screens/Login';
+import HeaderBar from '../components/Header'
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { theme } from '../../App';
-import {HomeIcon, SearchIcon, CartIcon,AccountIcon} from '../utils/icons'
+import {HomeIcon, SearchIcon, CartIcon,AccountIcon, OffersIcon} from '../utils/icons'
 import React from 'react'
 import Cart from '../screens/Cart';
 const TabNames = {
   home:'HOME',
-  search:"SEARCH",
+  offers:"OFFERS",
   cart:'CART',
   account:'ACCOUNT'
 }
@@ -29,7 +30,7 @@ const BottomTabs = createMaterialBottomTabNavigator(
         }
       }
     ),
-    [TabNames.search]:createStackNavigator(
+    [TabNames.offers]:createStackNavigator(
       {
         Home:{
           screen:Home
@@ -76,8 +77,8 @@ const BottomTabs = createMaterialBottomTabNavigator(
         switch(routeName){
           case TabNames.home:
             return <HomeIcon color={tintColor} size={22} />
-          case TabNames.search:
-            return <SearchIcon color={tintColor} size={22}/>
+          case TabNames.offers:
+            return <OffersIcon color={tintColor} size={22}/>
           case TabNames.cart:
             return <CartIcon color={tintColor} size={22}/>
           case TabNames.account:
@@ -90,7 +91,15 @@ const BottomTabs = createMaterialBottomTabNavigator(
         navigation.dispatch(StackActions.popToTop());
         defaultHandler();
       },
+    }),
+    navigationOptions:navigation =>({
+      header:()=> <HeaderBar {...navigation} />
     })
+  }
+)
+const AppStack = createStackNavigator(
+  {
+    BottomTabs:{screen:BottomTabs} 
   }
 )
 const AuthStack = createStackNavigator(
@@ -102,7 +111,7 @@ export default createAppContainer(
     createSwitchNavigator(
       {
         AuthStack:AuthStack,
-        AppStack:BottomTabs
+        AppStack:AppStack
       },
       {
         initialRouteName:'AppStack'

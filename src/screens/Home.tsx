@@ -1,61 +1,38 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
-
-import { withTheme, TouchableRipple } from 'react-native-paper';
-import { Icon, Header } from "react-native-elements"
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import { TouchableRipple, withTheme } from 'react-native-paper';
 import { AppText } from '../components/AppText';
-import { OffersIcon, ChevronDown } from '../utils/icons';
-import { theme, base, small } from '../../App';
-const Home = ()  => {
+import { small, base } from '../config/Theme';
+import { Button, Icon } from 'react-native-elements';
+
+const screenDimensions = Dimensions.get('window');
+
+const buttonWidth = screenDimensions.width/6.5
+const buttonHeight = screenDimensions.height/18
+const buttonRadius = (buttonWidth/buttonHeight)*10
+const Home = (props:any)  => {
   return (
     <>
       <SafeAreaView>
-        <Header
-        containerStyle={styles.headerContainer}
-        rightComponent={
-          <TouchableOpacity style={{flexDirection:'row'}}>
-            {OffersIcon({color:'#111',size:18})}
-            <AppText>{' '}Offers</AppText>
-          </TouchableOpacity>
-        }
-        placement={'left'} 
-        centerComponent={
-          <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}>
-            <AppText type={['large']}>Current Location{'  '}</AppText>
-            <ChevronDown size={18} color={'#111'} />
-          </TouchableOpacity>
-        }
-        />
         <TouchableRipple style={{padding:`${small}%`}}>
-        <View style={{backgroundColor:theme.colors.theme,paddingVertical:`${base}%`,borderRadius:8,paddingLeft:`${small}%`}}>
+        <View style={{backgroundColor:props.theme.colors.theme,paddingVertical:`${base}%`,borderRadius:8,paddingLeft:`${small}%`}}>
           <AppText type={['white','large']}>All Restaurants</AppText>
           <AppText type={['small','white']}>Delivering now</AppText>
         </View>
         </TouchableRipple>
-        
+        <Button 
+        containerStyle={{alignSelf:'center',elevation:4,}}
+        buttonStyle={{backgroundColor:props.theme.colors.theme,width:buttonWidth,height:buttonHeight,borderRadius:buttonRadius}}
+        icon={
+          <Icon
+            name="check"
+            size={20}
+            color={props.theme.colors.white}
+          />} 
+        />
       </SafeAreaView>
     </>
   );
 };
-const screenDimensions = Dimensions.get('window');
-const styles = StyleSheet.create({
-  headerContainer: {
-    height: screenDimensions.height * 0.08,
-    paddingTop: 0,
-    margin: 0,
-    backgroundColor: '#fff',
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 1,
-  },
-});
 
 export default withTheme(Home);

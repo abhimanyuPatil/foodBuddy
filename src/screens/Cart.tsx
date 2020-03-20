@@ -2,7 +2,7 @@ import LottieView from 'lottie-react-native';
 import React from 'react';
 import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
 import { withTheme } from 'react-native-paper';
-import { xLarge } from '../../App';
+import { xLarge } from '../config/Theme';
 
 const Cart = ()  => {
   return (
