@@ -12,6 +12,7 @@ import { theme } from '../../App';
 import {HomeIcon, SearchIcon, CartIcon,AccountIcon, OffersIcon} from '../utils/icons'
 import React from 'react'
 import Cart from '../screens/Cart';
+import { SignUp } from '../screens/Signup';
 const TabNames = {
   home:'HOME',
   offers:"OFFERS",
@@ -105,6 +106,10 @@ const AppStack = createStackNavigator(
 const AuthStack = createStackNavigator(
   {
     Login:{screen:Login,navigationOptions:()=>({headerShown:false})},
+    SignUp:{screen:SignUp,navigationOptions:()=>({headerShown:false})}
+  },
+  {
+    initialRouteName:'SignUp'
   }
 )
 export default createAppContainer(
@@ -114,7 +119,7 @@ export default createAppContainer(
         AppStack:AppStack
       },
       {
-        initialRouteName:'AppStack'
+        initialRouteName:'AuthStack'
       }
     ),
   );

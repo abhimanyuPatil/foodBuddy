@@ -1,9 +1,8 @@
 import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Dimensions, SafeAreaView, View } from 'react-native';
 import { TouchableRipple, withTheme } from 'react-native-paper';
 import { AppText } from '../components/AppText';
-import { small, base } from '../config/Theme';
-import { Button, Icon } from 'react-native-elements';
+import { base, small } from '../config/Theme';
 
 const screenDimensions = Dimensions.get('window');
 
@@ -20,16 +19,16 @@ const Home = (props:any)  => {
           <AppText type={['small','white']}>Delivering now</AppText>
         </View>
         </TouchableRipple>
-        <Button 
-        containerStyle={{alignSelf:'center',elevation:4,}}
-        buttonStyle={{backgroundColor:props.theme.colors.theme,width:buttonWidth,height:buttonHeight,borderRadius:buttonRadius}}
-        icon={
-          <Icon
-            name="check"
-            size={20}
-            color={props.theme.colors.white}
-          />} 
-        />
+        
+        <View style={{width: 200,
+ height: 0,
+ borderBottomWidth: 100,
+ borderBottomColor: 'red',
+ borderLeftWidth: 50,
+ borderLeftColor: 'transparent',
+ borderRightWidth: 50,
+ borderRightColor: 'transparent',
+ borderStyle: 'solid'}} />
       </SafeAreaView>
     </>
   );

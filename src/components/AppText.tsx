@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import { StyleSheet, TextProps } from 'react-native';
 import { Text, ThemeProps, } from 'react-native-elements';
-import { ITheme } from '../../App';
 import { withTheme } from 'react-native-paper';
+import { ITheme } from '../config/Theme';
 interface IColour {
     primary: string;
     background: string;
