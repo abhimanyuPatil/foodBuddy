@@ -119,7 +119,7 @@ export default createAppContainer(
         AppStack:AppStack
       },
       {
-        initialRouteName:'AuthStack'
+        initialRouteName:'AppStack'
       }
     ),
   );
