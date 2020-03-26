@@ -74,3 +74,13 @@ export const EditIcon = (props:IconProps)=>{
     const {size,color,...rest} = props
     return <Icon name='edit'  size={props.size} color={props.color}  {...rest}/>
 }
+
+export const FilterIcon = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return <Icon name='settings' type='octicon'  size={props.size} color={props.color}  {...rest}/>
+}
+
+export const FoodIcon = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return <Icon name='food' type='material-community'  size={props.size} color={props.color}  {...rest}/>
+}

@@ -1,6 +1,30 @@
 import { DefaultTheme } from 'react-native-paper';
 import { Fonts } from 'react-native-paper/lib/typescript/src/types';
-
+export interface IColour {
+  primary: string;
+  background: string;
+  surface: string;
+  accent: string;
+  error: string;
+  text: string;
+  onSurface: string;
+  onBackground: string;
+  disabled: string;
+  placeholder: string;
+  backdrop: string;
+  notification: string;
+  theme:string
+  secondary:string
+  grey0: string;
+  grey1: string;
+  grey2: string;
+  grey3: string;
+  grey4: string;
+  grey5: string;
+  success: string;
+  white: string;
+  borderColor: string;
+}
 export interface ITheme{
   dark: boolean;
     mode?: 'adaptive' | 'exact';
