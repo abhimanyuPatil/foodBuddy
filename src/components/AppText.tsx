@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { StyleSheet, TextProps } from 'react-native';
 import { Text, ThemeProps, } from 'react-native-elements';
 import { withTheme } from 'react-native-paper';
-import { ITheme } from '../config/Theme';
+import { ITheme, theme } from '../config/Theme';
 interface IColour {
     primary: string;
     background: string;
@@ -83,6 +83,7 @@ interface ITypography {
   success: any;
   capitalized: any;
   label: any;
+  xSmall:any
 }
 
 const styles: ITypography = {
@@ -114,6 +115,9 @@ const styles: ITypography = {
   }),
   small: (theme: any) => ({
     fontSize: theme.fontSizes.small,
+  }),
+  xSmall:(theme:any)=>({
+    fontSize:12
   }),
   large: (theme: any) => ({
     fontSize: theme.fontSizes.large,

@@ -84,17 +84,27 @@ const buttonWidth = window.width/6.5
 const buttonHeight = window.height/18
 const buttonRadius = (buttonWidth/buttonHeight)*10
 
-export const AuthButton = (props:ButtonProps)=>{
+export const AuthButton = (props:ButtonProps & {inverted?:boolean})=>{
     return (
         <Button 
         {...props}
         containerStyle={{alignSelf:'center',elevation:4,}}
-        buttonStyle={{backgroundColor:theme.colors.theme,width:buttonWidth,height:buttonHeight,borderRadius:buttonRadius}}
+        buttonStyle={
+            {
+                backgroundColor:props.inverted ? '#fff' : theme.colors.theme,
+                width:buttonWidth,
+                height:buttonHeight,
+                borderRadius:buttonRadius,
+                borderColor:props.inverted ? theme.colors.theme : '#fff',
+                borderWidth:props.inverted ? 0.8 : 0
+            }
+        }
+        titleStyle={{color:props.inverted ? theme.colors.theme : '#fff'}}
         icon={
           <Icon
             name="check"
             size={20}
-            color={theme.colors.white}
+            color={props.inverted ? theme.colors.theme : theme.colors.white}
           />} 
         />
     )

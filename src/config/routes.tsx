@@ -1,18 +1,15 @@
-import {
-    createAppContainer,
-    createSwitchNavigator,
-    StackActions
-  } from 'react-navigation';
-import Home from '../screens/Home'
-import { createStackNavigator } from 'react-navigation-stack';
-import Login from '../screens/Login';
-import HeaderBar from '../components/Header'
+import React from 'react';
+import { createAppContainer, createSwitchNavigator, StackActions } from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import { theme } from '../../App';
-import {HomeIcon, SearchIcon, CartIcon,AccountIcon, OffersIcon} from '../utils/icons'
-import React from 'react'
+import { createStackNavigator } from 'react-navigation-stack';
+import HeaderBar from '../components/Header';
 import Cart from '../screens/Cart';
+import Home from '../screens/Home';
+import Login from '../screens/Login';
 import { SignUp } from '../screens/Signup';
+import { SingleMess } from '../screens/SingleMess';
+import { AccountIcon, CartIcon, HomeIcon, OffersIcon } from '../utils/icons';
+import { Timings } from '../screens/Timings';
 const TabNames = {
   home:'HOME',
   offers:"OFFERS",
@@ -28,7 +25,22 @@ const BottomTabs = createMaterialBottomTabNavigator(
           navigationOptions:()=>({
             headerShown:false
           })
+        },
+        SingleMess:{
+          screen:SingleMess,
+          navigationOptions:()=>({
+            headerShown:false
+          })
+        },
+        Timings:{
+          screen:Timings,
+          navigationOptions:()=>({
+            headerShown:false,
+          })
         }
+      },
+      {
+        initialRouteName:'Timings'
       }
     ),
     [TabNames.offers]:createStackNavigator(
