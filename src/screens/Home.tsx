@@ -2,12 +2,13 @@ import React from 'react';
 import { Dimensions, SafeAreaView, View, TouchableOpacity, ScrollView, Image, FlatList } from 'react-native';
 import { TouchableRipple, withTheme } from 'react-native-paper';
 import { AppText } from '../components/AppText';
-import { base, small } from '../config/Theme';
+import { base, small, theme } from '../config/Theme';
 import { FilterModal } from '../components/FilterModal';
 import { LocationIcon, EditIcon, ChevronDown, FilterIcon, FoodIcon } from '../utils/icons';
 import { Icon } from 'react-native-elements';
-import { messList } from '../config/constants';
+import { messList, res } from '../config/constants';
 import { Label } from '../components/Label';
+import { useNavigation } from '../hooks/useNavigation';
 
 const screenDimensions = Dimensions.get('window');
 const Home = (props:any)  => {
@@ -43,7 +44,7 @@ const Home = (props:any)  => {
               </TouchableOpacity>
             </View>
           </View>
-          <FlatList showsVerticalScrollIndicator={false} keyExtractor={(item,i)=> `${i}`} data={messList} renderItem={({item,index})=>{return <MessCard theme={props.theme} M={item} key={index} />}} />
+          <FlatList showsVerticalScrollIndicator={false} keyExtractor={(item,i)=> `${i}`} data={res.data} renderItem={({item,index})=>{return <MessCard theme={props.theme} M={item} key={index} />}} />
 
         </View>
         <FilterModal visible={filterModal} closeModal={()=> toggleModal(false)} />
@@ -54,19 +55,20 @@ const Home = (props:any)  => {
 
 const MessCard =(props:any)=>{
   const {M}=props
+  const navigation = useNavigation()
   return (
-    <View  style={{backgroundColor:'#fff',borderRadius:8,paddingVertical:`${base}%`,paddingLeft:`${base}%`,flexDirection:'row',marginTop:`${small}%`}}>
+    <TouchableOpacity onPress={()=>navigation.navigate('SingleMess')}  style={{backgroundColor:'#fff',borderRadius:8,paddingVertical:`${base}%`,paddingLeft:`${base}%`,flexDirection:'row',marginTop:`${small}%`}}>
     <View style={{flex:0.2}}>
-      <Image source={require('../assets/images/tiffin.png')} resizeMode='contain' style={{width:'90%',height:screenDimensions.height*.2}} />
+      <Image source={require('../assets/images/tiffin.png')} resizeMode='contain' style={{width:'90%',height:screenDimensions.height*.15}} />
     </View>
     <View style={{flex:0.8}}>
       <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-          <AppText>
-            {M.messName}
+          <AppText type={['bold']}>
+            {M.shop_name}
           </AppText>
-          <Image resizeMode='contain' style={{width:20,height:20}}  source={require('../assets/images/veg.png')} />
+          <Image resizeMode='contain' style={{width:20,height:20,marginRight:base}}  source={require('../assets/images/veg.png')} />
       </View>
-      <AppText type={['small']}>
+      {/* <AppText type={['small']}>
       {
         M.cuisines.map((C,i)=>{
           if(i+1===M.cuisines.length){
@@ -78,12 +80,12 @@ const MessCard =(props:any)=>{
           }
         })
       }
-      </AppText>
-      <View style={{flexDirection:'row'}}>
+      </AppText> */}
+      <View style={{flexDirection:'row',marginVertical:`${small}%`}}>
         <LocationIcon color={props.theme.colors.theme} size={18} />
-        <AppText type={['small']}>{M.address}</AppText>
+        <AppText type={['small','capitalized']}>{M.address}</AppText>
       </View>
-      <View style={{flexDirection:'row'}}>
+      {/* <View style={{flexDirection:'row'}}>
         <FoodIcon color={props.theme.colors.theme} size={18}/>
         <AppText type={['success','small']}>
           {' '}
@@ -97,15 +99,21 @@ const MessCard =(props:any)=>{
             })
           }
         </AppText>
-      </View>
+      </View> */}
       <View style={{flexDirection:'row',flexWrap: 'wrap',display: 'flex',marginTop:`${small}%`}}>
-        <Label type='success' inverted text='Breakfast' />
-        <Label type='success' inverted text='Lunch' ViewStyle={{marginHorizontal:`${small}%`}} />
+      {
+        M.meal_type === 3 ? 
+        <><Label type='success' inverted text='Lunch' ViewStyle={{marginHorizontal:`${small}%`}} />
         <Label type='success' inverted text='Dinner' />
-
+        </>
+        :
+        M.meal_type === 2 ? <Label type='success' inverted text='Dinner' />
+        : <Label type='success' inverted text='Lunch' />
+      }
       </View>
     </View>
-  </View>
+    {/* <Icon name='checkcircle' type='antdesign' color={theme.colors.theme} containerStyle={{position:'absolute',right:0,top:'50%'}} /> */}
+  </TouchableOpacity>
   )
 }
 export default withTheme(Home);

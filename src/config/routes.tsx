@@ -7,10 +7,13 @@ import Cart from '../screens/Cart';
 import Home from '../screens/Home';
 import Login from '../screens/Login';
 import { SignUp } from '../screens/Signup';
-import { SingleMess } from '../screens/SingleMess';
+import SingleMess  from '../screens/SingleMess';
 import { AccountIcon, CartIcon, HomeIcon, OffersIcon } from '../utils/icons';
-import { Timings } from '../screens/Timings';
-const TabNames = {
+import { Booking } from '../screens/Booking';
+import { Menu } from '../components/Menu';
+import {createDrawerNavigator} from 'react-navigation-drawer';
+
+export const TabNames = {
   home:'HOME',
   offers:"OFFERS",
   cart:'CART',
@@ -32,15 +35,15 @@ const BottomTabs = createMaterialBottomTabNavigator(
             headerShown:false
           })
         },
-        Timings:{
-          screen:Timings,
+        Booking:{
+          screen:Booking,
           navigationOptions:()=>({
-            headerShown:false,
+            headerShown:false
           })
         }
       },
       {
-        initialRouteName:'Timings'
+        initialRouteName:'Home'
       }
     ),
     [TabNames.offers]:createStackNavigator(
@@ -115,6 +118,14 @@ const AppStack = createStackNavigator(
     BottomTabs:{screen:BottomTabs} 
   }
 )
+const App = createDrawerNavigator(
+  {
+    App:{screen:AppStack}
+  },
+  {
+    contentComponent:Menu
+  }
+)
 const AuthStack = createStackNavigator(
   {
     Login:{screen:Login,navigationOptions:()=>({headerShown:false})},
@@ -128,7 +139,7 @@ export default createAppContainer(
     createSwitchNavigator(
       {
         AuthStack:AuthStack,
-        AppStack:AppStack
+        AppStack:App
       },
       {
         initialRouteName:'AppStack'

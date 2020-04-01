@@ -3,10 +3,21 @@ import { Dimensions, Image, View, StyleSheet,Text, TouchableOpacity, Platform, U
 import { AppText } from '../components/AppText'
 import { Label } from '../components/Label'
 import { base, theme, small, tiny, large, xLarge } from '../config/Theme'
-import { FoodIcon } from '../utils/icons'
+import { FoodIcon, CartIcon } from '../utils/icons'
 import { ScrollView } from 'react-native-gesture-handler'
-import { ToggleButton, Switch, List } from 'react-native-paper'
+import { ToggleButton, Switch, List, Menu } from 'react-native-paper'
 import { AuthButton } from './Signup'
+import { useNavigation } from '../hooks/useNavigation'
+import { menu } from '../config/constants'
+import { chunk } from '../utils/chunkArray'
+import { AddButton, IncDecButton } from '../components/Buttons'
+import { connect, useDispatch } from 'react-redux';
+import { addToCart } from '../Redux/cart/actions'
+import { IStore } from '../Redux/store'
+import { ICartReducer } from '../Redux/cart/reducer'
+import { Icon } from 'react-native-elements'
+import { TabNames } from '../config/routes'
+const window = Dimensions.get('window')
 const cuisines=['Indian','Chinese']
 const services=['Dining','Tiffin']
 const starters = ['Veg Manchurian','Veg Chilly','Veg 65','veg Manchurian','Veg Chilly','Veg 65','veg Manchurian','Veg Chilly','Veg 65']
@@ -17,13 +28,196 @@ if (Platform.OS === 'android') {
     }
   }
 const timings = ['10am - 11am','11am - 12pm','12pm - 1pm','1pm - 2pm','2pm - 3pm','3pm - 4pm','4pm - 5pm','5pm - 6pm']
-export const SingleMess = ()=>{
+interface ISingleMess {
+    cartItems:PickKey<ICartReducer,'cartItems'>
+}
+const SingleMess = (props:ISingleMess)=>{
+    const {cartItems} = props
     return (
-        <ScrollView style={{flex:1,paddingHorizontal:`${small}%`}}>
-            <NameCard />
-            <Recommended />
-            <Cuisine1 />
-        </ScrollView>
+        <View style={{flex:1,justifyContent:'space-between'}}>
+            <ScrollView style={{flex:1,paddingHorizontal:`${small}%`}}>
+                <NameCard />
+                <Recommended cartItems={cartItems} />
+                <Cuisine1 />
+            </ScrollView>
+            {
+                cartItems.length > 0 && <Footer cartItems={cartItems} />
+            }
+            
+        </View>
+        
+    )
+}
+const Footer = (props:{cartItems:[]})=>{
+    const {cartItems} = props
+    const navigation = useNavigation()
+    return (
+        <TouchableOpacity onPress={()=>navigation.navigate(TabNames.cart)} style={{backgroundColor:theme.colors.theme,flexDirection:'row',height:window.height*0.05,alignItems:'center',paddingHorizontal:`${base}%`,justifyContent:'space-between'}}>
+            <AppText type={['white']}>{cartItems.length} items</AppText>
+            <View style={{flexDirection:'row'}}>
+                <Icon name='handbag' type='simple-line-icon' color={'#fff'} size={18}/>
+                <AppText type={['white']}>{' '}View Cart</AppText>
+            </View>
+        </TouchableOpacity>
+    )
+}
+const mapStateToProps = ((state:IStore)=>{
+    return {
+        cartItems:state.cartReducer.cartItems
+    }
+})
+export default connect(mapStateToProps,{})(SingleMess)
+const NameCard = () =>{
+    return (
+        <View  style={{backgroundColor:'#fff',borderRadius:8,paddingVertical:`${base}%`,paddingLeft:`${base}%`,flexDirection:'row',marginTop:`${small}%`}}>
+        <View style={{flex:0.2}}>
+            <Image source={require('../assets/images/tiffin.png')} resizeMode='contain' style={{width:'80%',height:screenDimensions.height*.10}} />
+        </View>
+        <View style={{flex:0.8}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                <AppText>
+                    Mom's Kitchen
+                </AppText>
+                <Image resizeMode='contain' style={{width:20,height:20}}  source={require('../assets/images/veg.png')} />
+            </View>
+            <AppText type={['small']} style={{marginVertical:`${small}%`}}>
+            {
+                cuisines.map((C,i)=>{
+                if(i+1===cuisines.length){
+                    return ` ${C}`
+                }else if(i===0){
+                    return `${C},`
+                }else{
+                    return ` ${C},`
+                }
+                })
+            }
+            </AppText>
+            <View style={{flexDirection:'row'}} >
+                <FoodIcon color={theme.colors.theme} size={18}/>
+                <AppText type={['success','small']}>
+                {' '}
+                {
+                    services.map((S,index)=>{
+                    if(index+1===services.length){
+                        return `& ${S}`
+                    }else if(index===services.length-2){
+                        return `${S} `
+                    }else {
+                        return `${S}, `
+                    }
+                    })
+                }
+                </AppText>
+            </View>
+            <View style={{flexDirection:'row',marginVertical:`${small}%`,display:'flex',flexWrap:'wrap'}}>
+                <AppText type={['small']}>Timings: </AppText>
+                {/* <View style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around',flexDirection:'row'}}> */}
+                    {
+                        timings.map((T,idx)=>{
+                            return (
+                                <Label ViewStyle={{marginHorizontal:`${tiny}%`}}  textStyle={{fontSize:10}} inverted type={'grey2'} text={T} key={idx}  />
+                            )
+                        })
+                    }
+                {/* </View> */}
+            </View>
+        </View>
+    </View>
+    )
+}
+const Recommended = (props:any) =>{
+    const [status,setStatus] = React.useState(false)
+    const chunks = chunk(menu.data.menus,2)
+    return (
+        <View style={{backgroundColor:'#fff',paddingHorizontal:`${small}%`,marginVertical:`${base}%`}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',marginVertical:`${small}%`,alignItems:'center'}}>
+                <AppText type={['bold']}>Recommended</AppText>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
+                    <AppText type={['small']}>VEG ONLY</AppText>
+                    <Switch
+                        color={theme.colors.theme}
+                        value={status}
+                        onValueChange={() =>
+                            setStatus(!status)
+                        }
+                    />
+                </View>
+            </View>
+            {
+                chunks.map((chunk,idx)=>{
+                    return (
+                        <View key={idx} style={{flexDirection:'row',flex:1,justifyContent:chunk.length===1?'flex-start':'space-between'}}>
+                            {chunk.map((M,i)=>{
+                                return <SingleItem cartItems={props.cartItems} menu={M} key={i} />
+                            })}
+                        </View>
+                    )
+                   
+                })
+            }
+        </View>
+    )
+}
+interface ISingleItem {
+    menu: {
+        available: number
+        id: number
+        images: string
+        name: string
+        price: number
+        veg: number
+        vendor_id: number
+    }
+    cartItems:PickKey<ICartReducer,'cartItems'>
+}
+const SingleItem = (props:ISingleItem) =>{
+    const dispatch = useDispatch()    
+    const {menu,cartItems} = props
+    const inCart = props.cartItems.find(C=>C.menuID===menu.id)
+    const onItemIncrement = (count:number)=>{
+        const remove = cartItems.filter(C=>C.menuID!==menu.id)
+        const newItem = {
+            menuID:menu.id,
+            quantity:count
+        }
+        dispatch(addToCart([newItem,...remove]))
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
+    const onItemDecrement = (count:number)=>{
+        const remove = cartItems.filter(C=>C.menuID!==menu.id)
+        const newItem = {
+            menuID:menu.id,
+            quantity:count
+        }
+        if(count===0){
+            dispatch(addToCart(remove))
+        }else{
+            dispatch(addToCart([newItem,...remove]))
+            console.log([newItem,...remove])
+        }
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    }
+    return (
+        <View style={styles.menuContainer}>
+                <Image source={require('../assets/images/tiffin.png')} style={styles.menuImage} />
+                <View style={{flexDirection:'row',marginTop:`${small}%`}}>
+                    <Image resizeMode='contain' style={{width:20,height:20}}  source={require('../assets/images/veg.png')} />
+                    <AppText type={['small']}> {props.menu.name}</AppText>
+                </View>
+                {/* <AppText style={{marginTop:`${small}%`}} type={['xSmall']}>1 Aalu Sabji, Dal, Rice, 2 Chapati</AppText> */}
+                {/* price Container */}
+                <View style={{marginTop:`${xLarge}%`}}>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+                        <AppText>Rs. {props.menu.price}</AppText>
+                        {
+                            !!inCart ? <IncDecButton onIncrement={(c)=>onItemIncrement(c)} onDecrement={(c)=>onItemDecrement(c)} count={inCart?.quantity} /> :<AddButton onPress={()=>{dispatch(addToCart({menuID:props.menu.id,quantity:1}));LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);}} title='Add' />
+                        }
+                        
+                    </View>
+                    <AppText style={{textDecorationLine:'line-through'}} type={['small']}>Rs. 100</AppText>
+                </View>
+        </View>
     )
 }
 const Cuisine1 = () =>{
@@ -81,132 +275,15 @@ const Cuisine1 = () =>{
         </View>
     )
 }
-const Recommended = () =>{
-    const [status,setStatus] = React.useState(false)
-    return (
-        <View style={{backgroundColor:'#fff',paddingHorizontal:`${small}%`,marginVertical:`${base}%`}}>
-            <View style={{flexDirection:'row',justifyContent:'space-between',marginVertical:`${small}%`,alignItems:'center'}}>
-                <AppText type={['bold']}>Recommended</AppText>
-                <View style={{flexDirection:'row',alignItems:'center'}}>
-                    <AppText type={['small']}>VEG ONLY</AppText>
-                    <Switch
-                        color={theme.colors.theme}
-                        value={status}
-                        onValueChange={() =>
-                            setStatus(!status)
-                        }
-                    />
-                </View>
-            </View>
-            <View style={{flexDirection:'row',flex:1,justifyContent:'space-evenly'}}>
-                <SingleItem />
-                <SingleItem />
-            </View>
-            <View style={{flexDirection:'row',flex:1,justifyContent:'space-evenly'}}>
-                <SingleItem />
-                <SingleItem />
-            </View>
-            <View style={{flexDirection:'row',flex:1,justifyContent:'space-evenly'}}>
-                <SingleItem />
-                <SingleItem />
-            </View>
-        </View>
-    )
-}
-const SingleItem = () =>{
-    return (
-        <View style={styles.menuContainer}>
-                <Image source={require('../assets/images/tiffin.png')} style={styles.menuImage} />
-                <View style={{flexDirection:'row',marginTop:`${small}%`}}>
-                    <Image resizeMode='contain' style={{width:20,height:20}}  source={require('../assets/images/veg.png')} />
-                    <AppText type={['small']}> Combo Meal Tiffin</AppText>
-                </View>
-                <AppText style={{marginTop:`${small}%`}} type={['xSmall']}>1 Aalu Sabji, Dal, Rice, 2 Chapati</AppText>
-                {/* price Container */}
-                <View style={{marginTop:`${xLarge}%`}}>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-                        <AppText>Rs. 80</AppText>
-                        <TouchableOpacity style={{borderWidth:.8,borderColor:theme.colors.theme,height:35,width:70,justifyContent:'center',alignItems:'center',borderRadius:20}}>
-                            <AppText type={['theme']}>ADD</AppText>
-                        </TouchableOpacity>
-                        {/* <AuthButton inverted={true} title='ADD' /> */}
-                    </View>
-                    <AppText style={{textDecorationLine:'line-through'}} type={['small']}>Rs. 100</AppText>
-                </View>
-        </View>
-    )
-}
+
 const styles = StyleSheet.create({
-    menuImage:{width:'100%',height:screenDimensions.height * 0.20,borderRadius:20},
+    menuImage:{width:'100%',height:screenDimensions.height * 0.15,},
     menuContainer:{
         flex:0.48,
         borderTopLeftRadius:10,
         borderTopRightRadius:10,
+        marginVertical:xLarge,
+        // backgroundColor:'cyan'
     }
 })
-const AddButton = () =>{
-    return (
-        <TouchableOpacity style={{borderWidth:.8,borderColor:theme.colors.theme,height:35,width:70,justifyContent:'center',alignItems:'center',borderRadius:20}}>
-            <AppText type={['theme']}>ADD</AppText>
-        </TouchableOpacity>
-    )
-}
-const NameCard = () =>{
-    return (
-        <View  style={{backgroundColor:'#fff',borderRadius:8,paddingVertical:`${base}%`,paddingLeft:`${base}%`,flexDirection:'row',marginTop:`${small}%`}}>
-        <View style={{flex:0.2}}>
-            <Image source={require('../assets/images/tiffin.png')} resizeMode='contain' style={{width:'90%',height:screenDimensions.height*.2}} />
-        </View>
-        <View style={{flex:0.8}}>
-            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                <AppText>
-                    Mom's Kitchen
-                </AppText>
-                <Image resizeMode='contain' style={{width:20,height:20}}  source={require('../assets/images/veg.png')} />
-            </View>
-            <AppText type={['small']} style={{marginVertical:`${small}%`}}>
-            {
-                cuisines.map((C,i)=>{
-                if(i+1===cuisines.length){
-                    return ` ${C}`
-                }else if(i===0){
-                    return `${C},`
-                }else{
-                    return ` ${C},`
-                }
-                })
-            }
-            </AppText>
-            <View style={{flexDirection:'row'}} >
-                <FoodIcon color={theme.colors.theme} size={18}/>
-                <AppText type={['success','small']}>
-                {' '}
-                {
-                    services.map((S,index)=>{
-                    if(index+1===services.length){
-                        return `& ${S}`
-                    }else if(index===services.length-2){
-                        return `${S} `
-                    }else {
-                        return `${S}, `
-                    }
-                    })
-                }
-                </AppText>
-            </View>
-            <View style={{flexDirection:'row',marginVertical:`${small}%`,display:'flex',flexWrap:'wrap'}}>
-                <AppText type={['small']}>Timings: </AppText>
-                {/* <View style={{display:'flex',flexWrap:'wrap',justifyContent:'space-around',flexDirection:'row'}}> */}
-                    {
-                        timings.map((T,idx)=>{
-                            return (
-                                <Label ViewStyle={{marginHorizontal:`${tiny}%`}}  textStyle={{fontSize:10}} inverted type={'grey2'} text={T} key={idx}  />
-                            )
-                        })
-                    }
-                {/* </View> */}
-            </View>
-        </View>
-    </View>
-    )
-}
+

@@ -15,19 +15,19 @@ const HeaderBar = (props:IHeader)=>{
             <Header
             containerStyle={styles.headerContainer}
             placement="center"
-            leftComponent={
-                <TouchableOpacity
-                    onPress={() => {
-                    props.navigation.openDrawer();
-                    }}>
-                    <Icon
-                    size={30}
-                    color={props.theme.colors.theme}
-                    name="menu"
-                    type="material-community"
-                    />
-                </TouchableOpacity>
-                }
+            // leftComponent={
+            //     <TouchableOpacity
+            //         onPress={() => {
+            //         props.navigation.openDrawer();
+            //         }}>
+            //         <Icon
+            //         size={30}
+            //         color={props.theme.colors.theme}
+            //         name="menu"
+            //         type="material-community"
+            //         />
+            //     </TouchableOpacity>
+            //     }
             centerComponent={<AppText type={['theme','header']}>Hi Divyansh</AppText>}
             rightComponent={
                 <TouchableOpacity>
