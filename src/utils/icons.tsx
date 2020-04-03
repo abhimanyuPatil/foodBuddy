@@ -45,6 +45,13 @@ export const ChevronDown = (props:IconProps)=>{
     )
 }
 
+export const ChevronLeft = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return (
+        <Icon name='chevron-left' type='entypo' size={props.size} color={props.color} {...rest}/>
+    )
+}
+
 export const RadioUnchecked = (props:IconProps)=>{
     const {size,color,...rest} = props
     return <Icon name='checkbox-blank-circle-outline' type='material-community' size={props.size} color={props.color}  {...rest}/>

@@ -12,12 +12,14 @@ import { AccountIcon, CartIcon, HomeIcon, OffersIcon } from '../utils/icons';
 import { Booking } from '../screens/Booking';
 import { Menu } from '../components/Menu';
 import {createDrawerNavigator} from 'react-navigation-drawer';
+import { Offers } from '../screens/Offers';
+import { More } from '../screens/More';
 
 export const TabNames = {
   home:'HOME',
   offers:"OFFERS",
   cart:'CART',
-  account:'ACCOUNT'
+  more:'MORE'
 }
 const BottomTabs = createMaterialBottomTabNavigator(
   {
@@ -48,9 +50,17 @@ const BottomTabs = createMaterialBottomTabNavigator(
     ),
     [TabNames.offers]:createStackNavigator(
       {
-        Home:{
-          screen:Home
+        Offers:{
+          screen:Offers,
+          navigationOptions:()=>({
+            headerShown:false
+          })
         }
+      },
+      {
+        navigationOptions:()=>({
+          headerShown:false
+        })
       }
     ),
     [TabNames.cart]:createStackNavigator(
@@ -63,10 +73,13 @@ const BottomTabs = createMaterialBottomTabNavigator(
         }
       }
     ),
-    [TabNames.account]:createStackNavigator(
+    [TabNames.more]:createStackNavigator(
       {
-        Home:{
-          screen:Home
+        More:{
+          screen:More,
+          navigationOptions:()=>({
+            headerShown:false
+          })
         }
       }
     ),
@@ -97,7 +110,7 @@ const BottomTabs = createMaterialBottomTabNavigator(
             return <OffersIcon color={tintColor} size={22}/>
           case TabNames.cart:
             return <CartIcon color={tintColor} size={22}/>
-          case TabNames.account:
+          case TabNames.more:
             return <AccountIcon color={tintColor} size={22}/>
           default:
             return null

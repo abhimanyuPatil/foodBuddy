@@ -97,7 +97,8 @@ const styles: ITypography = {
     // ...getFontStyleObject({ family: 'Lato', weight: 'Bold' }),
   }),
   primary: (theme: any) => ({
-    color: theme.colors.blue,
+    // color: theme.colors.blue,
+    color:'#3498db'
   }),
   theme: (theme: any) => ({
     color: theme.colors.theme,

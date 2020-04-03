@@ -1,5 +1,5 @@
 import React from "react"
-import { TouchableOpacity, TouchableOpacityProps, Dimensions, View } from "react-native"
+import { TouchableOpacity, TouchableOpacityProps, Dimensions, View, ViewStyle } from "react-native"
 import { AppText } from "./AppText"
 import { theme } from "../config/Theme"
 import { Icon } from "react-native-elements"
@@ -16,11 +16,15 @@ interface IIncDecButton{
     count:number
     onIncrement:(count:number)=>void
     onDecrement:(count:number)=>void
+    containerStyle:ViewStyle
 }
 export const IncDecButton = (props: IIncDecButton) => {
-    const {count,onDecrement,onIncrement} = props
+    const {count,onDecrement,onIncrement,containerStyle} = props
     return (
-        <View  style={{borderWidth:.8,borderColor:theme.colors.theme,height:window.height/25,width:window.width/6,borderRadius:5,justifyContent:'space-around',flexDirection:'row',alignItems:'center'}}>
+        <View  style={[
+            {borderWidth:.8,borderColor:theme.colors.theme,height:window.height/25,width:window.width/6,borderRadius:5,justifyContent:'space-around',flexDirection:'row',alignItems:'center'},
+            containerStyle
+            ]}>
             <TouchableOpacity onPress={()=>onDecrement(count-1)}>
                 <Icon name='minus' type='entypo' size={14} color={theme.colors.error}/>
             </TouchableOpacity>

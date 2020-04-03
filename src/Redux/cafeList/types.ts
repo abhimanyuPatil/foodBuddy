@@ -1,0 +1,1 @@
+export const SET_ACTIVE_MESS = 'SET_ACTIVE_MESS'
