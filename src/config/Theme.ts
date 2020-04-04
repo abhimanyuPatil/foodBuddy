@@ -23,6 +23,7 @@ export interface IColour {
   grey5: string;
   success: string;
   white: string;
+  warning: string,
   borderColor: string;
 }
 export interface ITheme{
@@ -53,6 +54,8 @@ export interface ITheme{
         success: string;
         white: string;
         borderColor: string;
+        warning: string,
+        
     };
     fonts: Fonts;
     animation: {
@@ -99,6 +102,7 @@ export const theme:ITheme = {
   success: '#28a745',
   white: '#fff',
   borderColor: '#ccc',
+  warning: '#ffc107',
   },
   spacing:{
     xTiny:1,

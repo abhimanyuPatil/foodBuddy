@@ -5,6 +5,8 @@ import { TouchableOpacity, Dimensions, StyleSheet } from 'react-native'
 import { AppText } from './AppText'
 import { withTheme } from 'react-native-paper'
 import { ITheme, large } from '../../App'
+import { small, theme } from '../config/Theme'
+import { LocationIcon } from '../utils/icons'
 interface IHeader{
     theme:ITheme
     navigation:any
@@ -14,21 +16,15 @@ const HeaderBar = (props:IHeader)=>{
         <SafeAreaView>
             <Header
             containerStyle={styles.headerContainer}
-            placement="center"
-            // leftComponent={
-            //     <TouchableOpacity
-            //         onPress={() => {
-            //         props.navigation.openDrawer();
-            //         }}>
-            //         <Icon
-            //         size={30}
-            //         color={props.theme.colors.theme}
-            //         name="menu"
-            //         type="material-community"
-            //         />
-            //     </TouchableOpacity>
-            //     }
-            centerComponent={<AppText type={['theme','header']}>Hi Divyansh</AppText>}
+            placement="left"
+            leftComponent={
+                <LocationIcon color={theme.colors.theme} size={24} containerStyle={{marginVertical:`${small}%`}} />
+                }
+            centerComponent={
+                <TouchableOpacity>
+                    <AppText style={{marginVertical:`${small}%`}} type={['small']}>SB Road, Saptshri Appartment, Behind ...</AppText>
+                </TouchableOpacity>
+            }      
             rightComponent={
                 <TouchableOpacity>
                     <Icon name='notifications-none' color={props.theme.colors.theme} size={22} />
@@ -41,10 +37,11 @@ const HeaderBar = (props:IHeader)=>{
 const screenDimensions = Dimensions.get('window');
 const styles = StyleSheet.create({
   headerContainer: {
-    height: screenDimensions.height * 0.08,
+    height: screenDimensions.height * 0.09,
     paddingTop: 0,
+    padding:0,
     margin: 0,
-    backgroundColor: 'transparent',
+    backgroundColor: '#fff',
     borderBottomColor: '#ccc',
     borderBottomWidth: 1,
   },

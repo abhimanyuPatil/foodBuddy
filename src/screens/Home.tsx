@@ -1,12 +1,12 @@
-import React from 'react';
-import { Dimensions, SafeAreaView, View, TouchableOpacity, ScrollView, Image, FlatList, Platform, PermissionsAndroid, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { Dimensions, SafeAreaView, View, TouchableOpacity, ScrollView, Image, FlatList, Platform, PermissionsAndroid, Alert, ImageBackground } from 'react-native';
 import { TouchableRipple, withTheme } from 'react-native-paper';
 import { AppText } from '../components/AppText';
 import { base, small, theme, ITheme } from '../config/Theme';
 import { FilterModal } from '../components/FilterModal';
 import { LocationIcon, EditIcon, ChevronDown, FilterIcon, FoodIcon } from '../utils/icons';
 import { Icon } from 'react-native-elements';
-import { res } from '../config/constants';
+import { res, rupee } from '../config/constants';
 import { Label } from '../components/Label';
 import { useNavigation } from '../hooks/useNavigation';
 import { useDispatch, connect } from 'react-redux';
@@ -19,8 +19,45 @@ import { IMessListReducer, ISingleMess } from '../Redux/cafeList/reducer';
 import { ICartReducer } from '../Redux/cart/reducer';
 import { Footer } from './SingleMess';
 import { EMPTY_CART } from '../Redux/cart/types';
-
+import Carousel from 'react-native-snap-carousel';
+import ImageOverlay from "react-native-image-overlay";
+import { cartActions } from '../Redux/cart';
 const screenDimensions = Dimensions.get('window');
+const banner = [
+  {image:require('../assets/images/img1.jpg')},
+  {image:require('../assets/images/img3.jpg')},
+  {image:require('../assets/images/img1.jpg')},
+  // {image:require('../assets/images/img2.jpg')}
+]
+const display1 = [
+  {
+    title: 'North Indian',
+    image: require('../assets/images/northIndia.jpeg')
+  },
+  {
+    title: 'Biryani',
+    image: require('../assets/images/biryani.jpg')
+  },
+  {
+    title: 'Fast Food',
+    image: require('../assets/images/fastfood.jpg')
+  }
+]
+const display2 = [
+  {
+    title: 'South Indian',
+    image: require('../assets/images/southIndia.jpeg')
+  },
+  {
+    title: 'Chinese',
+    image: require('../assets/images/chinese.jpg')
+  },
+  {
+    title: 'North Indian',
+    image: require('../assets/images/fastfood.jpg')
+  }
+]
+const display = [display1, display2];
 interface IHome {
   messList: PickKey<IMessListReducer,'list'>
   areaId:number,
@@ -30,6 +67,13 @@ interface IHome {
 }
 const Home = (props:IHome)  => {
   const {areaId,messList,location,cartItems,activeMess} = props
+  
+  // const [newList,setList] = useState([])
+  // React.useEffect(()=>{
+  //   const newList = messList.shift()
+  //   setList(newList)
+  // },[messList])
+  // console.log('>',newList,messList)
   React.useEffect(()=>{
     if (Platform.OS === 'android') {
       requestLocationPermission();
@@ -68,44 +112,90 @@ const Home = (props:IHome)  => {
       console.warn(err);
     }
   };
+  const renderBanner = (data:{item:{image:any},index:number})=>{
+    return (
+      <View style={{height:screenDimensions.height*.2,borderRadius:10,width:'100%'}}>
+        <Image style={{alignSelf:'center',height:screenDimensions.height*.2,borderRadius:10,width:'100%'}} resizeMode={'contain'} source={data.item.image} />
+      </View>
+    )
+  }
+  const renderImages = (data:any)=>{
+    return (
+      <View style={{flexDirection:'row',justifyContent:'space-between',height:screenDimensions.height*.18}}>
+        {
+          data.item.map((slide,idx)=>{
+            return (
+              <ImageOverlay
+                source={slide.image}
+                // title={slide.title}
+                contentPosition='center'
+                // titleStyle={{color:'#111'}}
+                containerStyle={{width:'30%',alignContent:'flex-start'}}
+                height={screenDimensions.height*0.2}
+                overlayColor="#111"
+                overlayAlpha={0.2}>
+                  <View>
+                  <AppText style={{marginBottom:20,alignSelf:'flex-start'}} type={['white','bold']}>{slide.title}</AppText>
+                  </View>
+                  
+                </ImageOverlay>
+            )
+          })
+        }
+        
+      </View>
+    )
+  }
   const [filterModal,toggleModal] = React.useState(false)
   return (
     <>
       <SafeAreaView style={{flex:1}}>
-        <View style={{paddingHorizontal:`${small}%`,flex:1}}>
-          <TouchableRipple>
-            <View style={{backgroundColor:theme.colors.white,borderRadius:8,elevation:4}}>
-              <View style={{backgroundColor:theme.colors.theme,flexDirection:'row',justifyContent:'space-between',borderTopLeftRadius:8,borderTopRightRadius:8,paddingHorizontal:`${small}%`}}>
-                <View style={{flexDirection:'row'}}>
-                  <LocationIcon color={'#fff'} size={22} containerStyle={{marginVertical:`${small}%`}} />
-                  <AppText style={{marginVertical:`${small}%`}} type={['white','small']}>SB Road, Saptshri Appartment, Behind ...</AppText>
-                </View>
-                <EditIcon color={'#fff'} size={18} containerStyle={{marginVertical:`${small}%`}} />
-              </View>
-              <View style={{backgroundColor:theme.colors.white,flexDirection:'row',justifyContent:'space-between',paddingHorizontal:`${small}%`,borderBottomLeftRadius:8,borderBottomRightRadius:8,alignItems:'center'}}>
-                <View style={{flexDirection:'row'}}>
-                  <Icon name='food' type='material-community' color={theme.colors.theme} size={22} />
-                  <AppText style={{marginVertical:`${small}%`}} type={['theme','small']}> Mess</AppText>
-                </View>
-                <ChevronDown color={theme.colors.theme} size={18} containerStyle={{marginVertical:`${small}%`}} />
-              </View>
-            </View>
-          </TouchableRipple>
-          <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:`${base}%`,alignItems:'center'}}>
-            <AppText type={['center']}>Mess Listing</AppText>
-            <View style={{flexDirection:'row',alignItems:'center'}}>
-              <AppText>Filter   </AppText>
-              <TouchableOpacity onPress={()=>toggleModal(true)}>
-                <FilterIcon containerStyle={{borderWidth:1,borderRadius:15,height:30,width:30,alignItems:'center',justifyContent:'center',borderColor:theme.colors.theme}} color={theme.colors.theme} size={18} />
-              </TouchableOpacity>
-            </View>
+        <ScrollView contentContainerStyle={{paddingHorizontal:`${small}%`}}>
+          <View style={{marginTop:`${base}%`}}> 
+            <Carousel
+              data={banner}
+              renderItem={data => renderBanner(data)}
+              firstItem={0}
+              sliderWidth={screenDimensions.width}
+              itemWidth={screenDimensions.width-100}
+              inactiveSlideScale={0.8}
+              inactiveSlideOpacity={0.4}
+              swipeThreshold={0}
+              loop={true}
+              autoplay={true}
+              autoplayDelay={0}
+              autoplayInterval={5000}
+              layout={'default'}
+              activeAnimationType={'spring'}
+            />
+          </View>
+          <MessCard cartItems={cartItems} activeMess={activeMess} theme={theme}  M={messList[0]}/>
+          <View style={{marginTop:`${base}%`}}> 
+          <Carousel
+            data={display}
+            renderItem={data => renderImages(data)}
+            firstItem={0}
+            sliderWidth={screenDimensions.width}
+            itemWidth={screenDimensions.width}
+            inactiveSlideScale={0.8}
+            inactiveSlideOpacity={0.4}
+            swipeThreshold={0}
+            loop={true}
+            autoplay={true}
+            autoplayDelay={0}
+            autoplayInterval={5000}
+            layout={'default'}
+            activeAnimationType={'spring'}
+            // onSnapToItem={index => setIndex(index)}
+          />
           </View>
           <FlatList showsVerticalScrollIndicator={false} keyExtractor={(item,i)=> `${i}`} data={messList} renderItem={({item,index})=>{return <MessCard activeMess={activeMess} cartItems={cartItems} theme={theme} M={item} key={index} />}} />
           {/* {
               cartItems.length > 0 && <Footer cartItems={cartItems} />
           } */}
-        </View>
-        {
+        
+          </ScrollView>
+          {
               cartItems.length > 0 && <Footer cartItems={cartItems} />
           }
         <FilterModal visible={filterModal} closeModal={()=> toggleModal(false)} />
@@ -161,32 +251,22 @@ const MessCard =(props:IMessCard)=>{
     navigation.navigate('SingleMess')
   }
   return (
-    <TouchableOpacity onPress={()=>goToMess()}  style={{backgroundColor:'#fff',borderRadius:8,paddingVertical:`${base}%`,paddingLeft:`${base}%`,flexDirection:'row',marginTop:`${small}%`}}>
+    <TouchableOpacity onPress={()=>goToMess()}  style={{backgroundColor:'#fff',borderRadius:8,
+    // paddingVertical:`${base}%`,
+    paddingLeft:`${base}%`,flexDirection:'row',marginTop:`${small}%`}}>
       <View style={{flex:0.2}}>
         <Image source={require('../assets/images/tiffin.png')} resizeMode='contain' style={{width:'90%',height:screenDimensions.height*.15}} />
       </View>
       <View style={{flex:0.8}}>
-        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+        <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:`${small}%`}}>
             <AppText type={['bold']}>
               {M.shop_name}
             </AppText>
-            <Image resizeMode='contain' style={{width:20,height:20,marginRight:base}}  source={require('../assets/images/veg.png')} />
+            <Label textStyle={{fontWeight:'normal'}} type='success' text={'4.0'} />
         </View>
-      <View style={{flexDirection:'row',marginVertical:`${small}%`}}>
-        <LocationIcon color={props.theme.colors.theme} size={18} />
-        <AppText type={['small','capitalized']}>{M.address}</AppText>
-      </View>
-      <View style={{flexDirection:'row',flexWrap: 'wrap',display: 'flex',marginTop:`${small}%`}}>
-      {
-        M.meal_type === 3 ? 
-        <><Label type='success' inverted text='Lunch' ViewStyle={{marginHorizontal:`${small}%`}} />
-        <Label type='success' inverted text='Dinner' />
-        </>
-        :
-        M.meal_type === 2 ? <Label type='success' inverted text='Dinner' />
-        : <Label type='success' inverted text='Lunch' />
-      }
-      </View>
+        <AppText type={['small']}>Fast Food, South Indian, Rolls...</AppText>
+        <AppText style={{marginVertical:`${small}%`}} type={['small']}>{rupee}200 per person | 30 mins</AppText>
+        <AppText type={['small','warning']}>40% Off - Use Code FOODBUDD</AppText>
     </View>
   </TouchableOpacity>
   )

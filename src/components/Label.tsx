@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextStyle, ViewStyle, View } from 'react-native';
-import { small, theme, IColour } from '../config/Theme';
+import { small, theme, IColour, tiny } from '../config/Theme';
 import { AppText } from './AppText';
 interface ILabel {
   text: string;
@@ -21,14 +21,15 @@ export const Label = (props: ILabel) => {
     <View
       style={[
         {
-          paddingHorizontal: `${small}%`,
+          paddingHorizontal: `${tiny}%`,
           justifyContent: 'center',
           alignContent: 'center',
           alignItems: 'center',
           backgroundColor: inverted ? '#fff' : theme.colors[type],
           borderWidth: inverted ? 0.8 : 0,
           borderColor: theme.colors[type],
-          height: 30,
+          height: 25,
+          borderRadius:4
         },
         { ...ViewStyle },
       ]}>

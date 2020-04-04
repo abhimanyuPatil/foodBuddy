@@ -40,7 +40,7 @@ const SingleMess = (props:ISingleMess)=>{
             <ScrollView style={{flex:1,paddingHorizontal:`${small}%`}}>
                 <NameCard name={activeMess?.shop_name} />
                 <Recommended cartItems={cartItems} />
-                <Cuisine1 />
+                {/* <Cuisine1 /> */}
             </ScrollView>
             {
                 cartItems.length > 0 && <Footer cartItems={cartItems} />

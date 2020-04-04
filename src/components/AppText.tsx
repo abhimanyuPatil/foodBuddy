@@ -83,7 +83,8 @@ interface ITypography {
   success: any;
   capitalized: any;
   label: any;
-  xSmall:any
+  xSmall:any;
+  warning:any
 }
 
 const styles: ITypography = {
@@ -102,6 +103,9 @@ const styles: ITypography = {
   }),
   theme: (theme: any) => ({
     color: theme.colors.theme,
+  }),
+  warning: (theme: any) => ({
+    color: theme.colors.warning,
   }),
   secondary: (theme: any) => ({
     color: theme.colors.secondary,
