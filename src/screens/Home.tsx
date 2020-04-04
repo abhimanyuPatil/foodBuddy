@@ -1,8 +1,8 @@
 import React from 'react';
-import { Dimensions, SafeAreaView, View, TouchableOpacity, ScrollView, Image, FlatList, Platform, PermissionsAndroid } from 'react-native';
+import { Dimensions, SafeAreaView, View, TouchableOpacity, ScrollView, Image, FlatList, Platform, PermissionsAndroid, Alert } from 'react-native';
 import { TouchableRipple, withTheme } from 'react-native-paper';
 import { AppText } from '../components/AppText';
-import { base, small, theme } from '../config/Theme';
+import { base, small, theme, ITheme } from '../config/Theme';
 import { FilterModal } from '../components/FilterModal';
 import { LocationIcon, EditIcon, ChevronDown, FilterIcon, FoodIcon } from '../utils/icons';
 import { Icon } from 'react-native-elements';
@@ -15,16 +15,21 @@ import Geolocation from '@react-native-community/geolocation';
 import { SET_LOCATION } from '../Redux/user/types';
 import { useFetch } from 'use-fetch-lib';
 import { IStore } from '../Redux/store';
-import { IMessListReducer } from '../Redux/cafeList/reducer';
+import { IMessListReducer, ISingleMess } from '../Redux/cafeList/reducer';
+import { ICartReducer } from '../Redux/cart/reducer';
+import { Footer } from './SingleMess';
+import { EMPTY_CART } from '../Redux/cart/types';
 
 const screenDimensions = Dimensions.get('window');
 interface IHome {
   messList: PickKey<IMessListReducer,'list'>
   areaId:number,
   location:{lat:number,lng:number}
+  cartItems:PickKey<ICartReducer,'cartItems'>
+  activeMess:PickKey<IMessListReducer,'activeMess'>
 }
 const Home = (props:IHome)  => {
-  const {areaId,messList,location} = props
+  const {areaId,messList,location,cartItems,activeMess} = props
   React.useEffect(()=>{
     if (Platform.OS === 'android') {
       requestLocationPermission();
@@ -95,9 +100,14 @@ const Home = (props:IHome)  => {
               </TouchableOpacity>
             </View>
           </View>
-          <FlatList showsVerticalScrollIndicator={false} keyExtractor={(item,i)=> `${i}`} data={messList} renderItem={({item,index})=>{return <MessCard theme={theme} M={item} key={index} />}} />
-
+          <FlatList showsVerticalScrollIndicator={false} keyExtractor={(item,i)=> `${i}`} data={messList} renderItem={({item,index})=>{return <MessCard activeMess={activeMess} cartItems={cartItems} theme={theme} M={item} key={index} />}} />
+          {/* {
+              cartItems.length > 0 && <Footer cartItems={cartItems} />
+          } */}
         </View>
+        {
+              cartItems.length > 0 && <Footer cartItems={cartItems} />
+          }
         <FilterModal visible={filterModal} closeModal={()=> toggleModal(false)} />
       </SafeAreaView>
     </>
@@ -107,16 +117,51 @@ const mapStateToProps = ((state:IStore)=>{
   return {
     areaId:state.userReducer.areaId,
     location:state.userReducer.location,
-    messList:state.messListReducer.list
+    messList:state.messListReducer.list,
+    cartItems:state.cartReducer.cartItems,
+    activeMess:state.messListReducer.activeMess
   }
 })
 export default connect(mapStateToProps,{})(Home)
-const MessCard =(props:any)=>{
-  const {M}=props
+interface IMessCard {
+  cartItems:PickKey<ICartReducer,'cartItems'>
+  M:ISingleMess
+  activeMess:PickKey<IMessListReducer,'activeMess'>
+  theme:ITheme
+}
+const MessCard =(props:IMessCard)=>{
+  const {M,activeMess,cartItems,theme}=props
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const goToMess = () =>{
+    if(cartItems.length>0){
+      if(M.id === activeMess.id){
+        dispatch({type:SET_ACTIVE_MESS,payload:M})
+        navigation.navigate('SingleMess')
+      }else{
+        Alert.alert(
+          'Items already in cart',
+          'You already have items in your cart from other mess.',
+          [
+            // {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
+            {text: 'Checkout', onPress: () => navigation.navigate('Cart'), style: 'cancel'},
+            {text: 'Clear cart and continue?', onPress: () => clearCart()},
+          ],
+          { cancelable: false }
+        )
+      }
+    }else{
+      dispatch({type:SET_ACTIVE_MESS,payload:M})
+      navigation.navigate('SingleMess')
+    }   
+  }
+  const clearCart = () =>{
+    dispatch({type:EMPTY_CART})
+    dispatch({type:SET_ACTIVE_MESS,payload:M})
+    navigation.navigate('SingleMess')
+  }
   return (
-    <TouchableOpacity onPress={()=>{dispatch({type:SET_ACTIVE_MESS,payload:M});navigation.navigate('SingleMess')}}  style={{backgroundColor:'#fff',borderRadius:8,paddingVertical:`${base}%`,paddingLeft:`${base}%`,flexDirection:'row',marginTop:`${small}%`}}>
+    <TouchableOpacity onPress={()=>goToMess()}  style={{backgroundColor:'#fff',borderRadius:8,paddingVertical:`${base}%`,paddingLeft:`${base}%`,flexDirection:'row',marginTop:`${small}%`}}>
       <View style={{flex:0.2}}>
         <Image source={require('../assets/images/tiffin.png')} resizeMode='contain' style={{width:'90%',height:screenDimensions.height*.15}} />
       </View>

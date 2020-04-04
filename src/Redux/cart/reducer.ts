@@ -1,4 +1,4 @@
-import { ADD_TO_CART } from "./types";
+import { ADD_TO_CART, EMPTY_CART } from "./types";
 
 export interface ICartReducer {
     cartItems : {menuID:number,quantity:number}[]
@@ -15,6 +15,11 @@ export default (
         return {
           ...state,
           cartItems:Array.isArray(payload)  ? payload : [payload,...state.cartItems] 
+        }
+      case EMPTY_CART:
+        return {
+          ...state,
+          cartItems:[]
         }
       default:
         return state;

@@ -52,6 +52,14 @@ export const ChevronLeft = (props:IconProps)=>{
     )
 }
 
+export const ChevronRight = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return (
+        <Icon name='chevron-right' type='entypo' size={props.size} color={props.color} {...rest}/>
+    )
+}                
+
+
 export const RadioUnchecked = (props:IconProps)=>{
     const {size,color,...rest} = props
     return <Icon name='checkbox-blank-circle-outline' type='material-community' size={props.size} color={props.color}  {...rest}/>
@@ -90,4 +98,9 @@ export const FilterIcon = (props:IconProps)=>{
 export const FoodIcon = (props:IconProps)=>{
     const {size,color,...rest} = props
     return <Icon name='food' type='material-community'  size={props.size} color={props.color}  {...rest}/>
+}
+
+export const AddressIcon = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return <Icon name='address-card-o' type='font-awesome'  size={props.size} color={props.color}  {...rest}/>
 }

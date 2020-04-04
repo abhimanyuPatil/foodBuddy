@@ -115,7 +115,7 @@ export const NameCard = (props:{name:string,inCart?:boolean,address?:string}) =>
     </View>
     )
 }
-const Footer = (props:{cartItems:{quantity:number}[]})=>{
+export const Footer = (props:{cartItems:{quantity:number}[]})=>{
     const {cartItems} = props
     const navigation = useNavigation()
     const [count,setCount] = useState(0)

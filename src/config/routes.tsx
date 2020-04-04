@@ -14,6 +14,7 @@ import { Menu } from '../components/Menu';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import { Offers } from '../screens/Offers';
 import { More } from '../screens/More';
+import ManageAddress from '../screens/ManageAddress';
 
 export const TabNames = {
   home:'HOME',
@@ -27,8 +28,8 @@ const BottomTabs = createMaterialBottomTabNavigator(
       {
         Home:{
           screen:Home,
-          navigationOptions:()=>({
-            headerShown:false
+          navigationOptions:navigation =>({
+            header:()=> <HeaderBar {...navigation} />
           })
         },
         SingleMess:{
@@ -80,6 +81,12 @@ const BottomTabs = createMaterialBottomTabNavigator(
           navigationOptions:()=>({
             headerShown:false
           })
+        },
+        ManageAddress:{
+          screen:ManageAddress,
+          navigationOptions:()=>({
+            headerShown:false
+          })
         }
       }
     ),
@@ -122,7 +129,8 @@ const BottomTabs = createMaterialBottomTabNavigator(
       },
     }),
     navigationOptions:navigation =>({
-      header:()=> <HeaderBar {...navigation} />
+      // header:()=> <HeaderBar {...navigation} />
+      headerShown:false
     })
   }
 )

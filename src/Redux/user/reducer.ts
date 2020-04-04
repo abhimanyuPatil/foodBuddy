@@ -6,13 +6,15 @@ export interface IUser {
     userName:string
     profilePhoto:string|null
     areaId:number
+    address:{type:'home' | 'other' | 'office',address:string,areadId:number,pincode:string}[]
 }
 const initialValues:IUser = {
     token:'',
     location:{lat:0,lng:0},
     userName:'',
     profilePhoto:'',
-    areaId:0
+    areaId:0,
+    address:[]
 }
 export default (
     state: IUser = initialValues,

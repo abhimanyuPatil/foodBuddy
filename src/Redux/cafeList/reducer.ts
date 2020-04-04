@@ -1,7 +1,7 @@
 import { res } from "../../config/constants";
 import { SET_ACTIVE_MESS } from "./types";
 
-interface ISingleMess{
+export interface ISingleMess{
   "id": number,
   "shop_name": string
   "address": string

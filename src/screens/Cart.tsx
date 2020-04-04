@@ -26,6 +26,12 @@ if (Platform.OS === 'android') {
 
 const Cart = (props:ICart)  => {
   const {activeMess,cartItems} = props
+  const [count,setCount] = useState(0)
+    React.useEffect(()=>{
+        const quants = cartItems.map(C=>C.quantity*C.price)
+        const number = quants.reduce((a, b) => a + b, 0)
+        setCount(number)
+    },[cartItems])
   return (
       <SafeAreaView style={{flex:1}}>
         {
@@ -69,7 +75,7 @@ const Cart = (props:ICart)  => {
             </ScrollView>
             <View style={{height:window.height*0.07,flexDirection:'row',alignItems:'center'}}>
               <View style={{flex:1,alignItems:'center',backgroundColor:theme.colors.grey5,height:window.height*0.07}}>
-                <AppText type={['bold']}>{rupee}700</AppText>
+                <AppText type={['bold']}>{rupee}{count+50+50}</AppText>
                 <TouchableOpacity><AppText type={['primary','small']}>View Detailed Bill</AppText></TouchableOpacity>
               </View>
               <View style={{flex:1,backgroundColor:theme.colors.theme,height:window.height*0.07,alignItems:'center',justifyContent:'center'}}>
@@ -112,7 +118,7 @@ const BillDetails = (props:IBill)=>{
       <Divider style={{ backgroundColor: '#ccc' }} />
       <View style={{flexDirection:'row',marginVertical:`${tiny}%`}}>
         <AppText type={['bold']} style={{flex:0.8}}>To Pay</AppText>
-        <AppText style={{flex:0.2}}>{rupee}{`50`}</AppText>
+        <AppText style={{flex:0.2}}>{rupee}{count+50+50}</AppText>
       </View>
     </View>
   )

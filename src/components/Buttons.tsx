@@ -2,7 +2,7 @@ import React from "react"
 import { TouchableOpacity, TouchableOpacityProps, Dimensions, View, ViewStyle } from "react-native"
 import { AppText } from "./AppText"
 import { theme } from "../config/Theme"
-import { Icon } from "react-native-elements"
+import { Icon, Button, ButtonProps } from "react-native-elements"
 const window = Dimensions.get('window')
 export const AddButton = (props:TouchableOpacityProps & {title:string}) => {
     const {title,...rest} = props
@@ -35,5 +35,22 @@ export const IncDecButton = (props: IIncDecButton) => {
                 <Icon name='plus' type='entypo' size={14} color={theme.colors.success} />
             </TouchableOpacity>
         </View>
+    )
+}
+
+export const ThemeButton = (props:ButtonProps & {inverted:boolean})=>{
+    const {title,buttonStyle,containerStyle,inverted} = props
+    return (
+        <Button 
+            title={title} 
+            containerStyle={[{width:'80%'},containerStyle]}
+            buttonStyle={
+                [
+                    {backgroundColor:inverted ? '#fff' :theme.colors.theme,borderColor:theme.colors.theme},
+                    {borderWidth:inverted ? 0.8 : 0},
+                    buttonStyle
+                ]} 
+            titleStyle={{color:inverted ? theme.colors.theme : '#fff'}} 
+        />
     )
 }
