@@ -206,7 +206,24 @@ export const menu = {
     }
 }
 
-
+export const Lunch = {
+    "id": 6,
+    "name": "Paneer Tikka Masala",
+    "price": 150,
+    "vendor_id": 1,
+    "images": null,
+    "veg": 1,
+    "available": 1
+}
+export const dinner = {
+    "id": 7,
+    "name": "Paneer Butter Masala",
+    "price": 150,
+    "vendor_id": 1,
+    "images": null,
+    "veg": 1,
+    "available": 1
+}
 const addToCart = 'http://localhost:3000/api/cart/add'
 //payload 
 // {

@@ -7,8 +7,8 @@ const window = Dimensions.get('window')
 export const AddButton = (props:TouchableOpacityProps & {title:string}) => {
     const {title,...rest} = props
     return (
-        <TouchableOpacity {...rest} style={{borderWidth:.8,borderColor:theme.colors.theme,height:window.height/21,width:window.width/6,justifyContent:'center',alignItems:'center',borderRadius:20}}>
-            <AppText type={['theme']}>{title}</AppText>
+        <TouchableOpacity {...rest} style={{borderWidth:.8,borderColor:theme.colors.theme,height:window.height/22.5,width:window.width/7,justifyContent:'center',alignItems:'center',borderRadius:10}}>
+            <AppText type={['theme','small']}>{title}</AppText>
         </TouchableOpacity>
     )
 }

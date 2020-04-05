@@ -135,7 +135,7 @@ const styles: ITypography = {
     // ...getFontStyleObject({ family: 'Lato', weight: 'Regular' }),
   }),
   header: (theme: any) => ({
-    textAlign: 'center',
+    // textAlign: 'center',
     fontSize: theme.fontSizes.header,
     // ...getFontStyleObject({ family: 'Lato', weight: 'Bold' }),
   }),

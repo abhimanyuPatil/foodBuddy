@@ -104,3 +104,8 @@ export const AddressIcon = (props:IconProps)=>{
     const {size,color,...rest} = props
     return <Icon name='address-card-o' type='font-awesome'  size={props.size} color={props.color}  {...rest}/>
 }
+
+export const TimerIcon = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return <Icon name='timer'  size={props.size} color={props.color}  {...rest}/>
+}
