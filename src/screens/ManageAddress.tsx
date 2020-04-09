@@ -8,11 +8,13 @@ import { ThemeButton } from "../components/Buttons"
 import { base, large, xLarge, small } from "../config/Theme"
 import { useFetch } from "use-fetch-lib"
 import { Loader } from "../components/Loader"
+import { useNavigation } from "../hooks/useNavigation"
 interface IManageAddress{
     addressList:PickKey<IUser,'address'>
 }
 const ManageAddress = (props:IManageAddress)=>{
     const {addressList} = props
+    const navigation = useNavigation()
     // const [data,status] = useFetch({
     //     url:'',
     //     method:'get',
@@ -27,7 +29,7 @@ const ManageAddress = (props:IManageAddress)=>{
             addressList.length === 0 ?
                 <View style={{flex:1,justifyContent:'center',alignItems:'center',paddingHorizontal:`${xLarge}%`,backgroundColor:'#fff'}}>
                     <AppText>You don't have any saved address.</AppText>
-                    <ThemeButton containerStyle={{marginTop:`${small}%`}} inverted title={"Add Address"} />
+                    <ThemeButton onPress={()=>{navigation.navigate('AddAddress')}} containerStyle={{marginTop:`${small}%`}} inverted title={"Add Address"} />
                 </View>
             :
                 <View>

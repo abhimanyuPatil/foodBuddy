@@ -39,9 +39,10 @@ export const IncDecButton = (props: IIncDecButton) => {
 }
 
 export const ThemeButton = (props:ButtonProps & {inverted:boolean})=>{
-    const {title,buttonStyle,containerStyle,inverted} = props
+    const {title,buttonStyle,containerStyle,inverted,...rest} = props
     return (
         <Button 
+            {...rest}
             title={title} 
             containerStyle={[{width:'80%'},containerStyle]}
             buttonStyle={

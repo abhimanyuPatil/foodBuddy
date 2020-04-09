@@ -10,6 +10,13 @@ export const HomeIcon = (props:IconProps)=>{
         <Icon name="home" type="entypo" size={props.size} color={props.color}  {...rest} />
     )
 }
+
+export const HomeIconO = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return (
+        <Icon name="home-outline" type="material-community" size={props.size} color={props.color}  {...rest} />
+    )
+}
 export const SearchIcon = (props:IconProps)=>{
     const {size,color,...rest} = props
     return (
@@ -85,6 +92,11 @@ export const LocationIcon = (props:IconProps)=>{
     return <Icon name='location-pin' type='entypo' size={props.size} color={props.color}  {...rest}/>
 }
 
+export const LocationIconO = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return <Icon name='location' type='octicon' size={props.size} color={props.color}  {...rest}/>
+}
+
 export const EditIcon = (props:IconProps)=>{
     const {size,color,...rest} = props
     return <Icon name='edit'  size={props.size} color={props.color}  {...rest}/>
@@ -108,4 +120,19 @@ export const AddressIcon = (props:IconProps)=>{
 export const TimerIcon = (props:IconProps)=>{
     const {size,color,...rest} = props
     return <Icon name='timer'  size={props.size} color={props.color}  {...rest}/>
+}
+
+export const CloseIcon = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return <Icon name='close' type='antdesign'  size={props.size} color={props.color}  {...rest}/>
+}
+
+export const OfficeIcon = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return <Icon name='building' type='font-awesome'  size={props.size} color={props.color}  {...rest}/>
+}
+
+export const OfficeIconO = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return <Icon name='building-o' type='font-awesome'  size={props.size} color={props.color}  {...rest}/>
 }

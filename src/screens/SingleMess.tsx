@@ -119,7 +119,7 @@ const LunchCard = (props:ILunchCard) =>{
                     </ImageOverlay>
                 </View>
                 <View style={{flex:0.8,padding:`${small}%`,borderRadius:15}}>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                         <View style={{flexDirection:'row',display:'flex',flexWrap:'wrap',flex:1}}><AppText type={['bold']}>{menu.name}</AppText></View>
                         {
                             !!inCart ? 
@@ -128,6 +128,7 @@ const LunchCard = (props:ILunchCard) =>{
                                 <AddButton onPress={()=>{dispatch(addToCart({menuID:props.menu.id,quantity:1,name:props.menu.name,price:props.menu.price}));LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);}} title='+ Add' />
                         }
                     </View>
+                    <AppText type={['small']}>2 Chapati, 1 Rice bowl, 1 Daal</AppText>
                     <AppText type={['small']}>In Best Sellers</AppText>
                     <View style={{flexDirection:'row',marginVertical:`${tiny}%`}}>
                         <Rating readonly startingValue={4} imageSize={18} />
@@ -305,12 +306,22 @@ const SingleItem = (props:ISingleItem) =>{
     }
     return (
         <View style={styles.menuContainer}>
-                <Image source={require('../assets/images/tiffin.png')} style={styles.menuImage} />
+                <ImageOverlay
+                    source={require('../assets/images/southIndia.jpeg')}
+                    // title={slide.title}
+                    contentPosition='center'
+                    // titleStyle={{color:'#111'}}
+                    containerStyle={{width:'100%',alignContent:'flex-start',borderRadius:10}}
+                    height={screenDimensions.height*0.1}
+                    overlayColor="#111"
+                    overlayAlpha={0.2}>                  
+                </ImageOverlay>
+                {/* <Image source={require('../assets/images/tiffin.png')} style={styles.menuImage} /> */}
                 <View style={{flexDirection:'row',marginTop:`${small}%`}}>
                     <Image resizeMode='contain' style={{width:20,height:20}}  source={require('../assets/images/veg.png')} />
                     <AppText type={['small']}> {props.menu.name}</AppText>
                 </View>
-                {/* <AppText style={{marginTop:`${small}%`}} type={['xSmall']}>1 Aalu Sabji, Dal, Rice, 2 Chapati</AppText> */}
+                <AppText style={{marginTop:`${small}%`}} type={['xSmall']}>1 Aalu Sabji, Dal, Rice, 2 Chapati</AppText>
                 {/* price Container */}
                 <View style={{marginTop:`${xLarge}%`}}>
                     <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>

@@ -15,6 +15,7 @@ import {createDrawerNavigator} from 'react-navigation-drawer';
 import { Offers } from '../screens/Offers';
 import { More } from '../screens/More';
 import ManageAddress from '../screens/ManageAddress';
+import { AddAddress } from '../screens/AddAddress';
 
 export const TabNames = {
   home:'HOME',
@@ -87,7 +88,16 @@ const BottomTabs = createMaterialBottomTabNavigator(
           navigationOptions:()=>({
             headerShown:false
           })
+        },
+        AddAddress:{
+          screen:AddAddress,
+          navigationOptions:()=>({
+            headerShown:false
+          })
         }
+      },
+      {
+        // initialRouteName:'AddAddress'
       }
     ),
   },

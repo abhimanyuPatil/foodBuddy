@@ -69,7 +69,7 @@ export const res = {
             "is_blocked": 0
         },
         {
-            "id": 2,
+            "id": 3,
             "shop_name": "Dabba Adda",
             "address": "Karve Road",
             "area_id": 1, //user area
@@ -97,7 +97,11 @@ export const res = {
             "is_blocked": 0
         },
         {
-            "id": 2,
+            "id":0,
+            "type":"Ad"
+        },
+        {
+            "id": 4,
             "shop_name": "Mom's Kitchen",
             "address": "karvenagar",
             "area_id": 1, //user area
@@ -125,7 +129,7 @@ export const res = {
             "is_blocked": 0
         },
         {
-            "id": 2,
+            "id": 5,
             "shop_name": "Mess",
             "address": "Kothrud",
             "area_id": 1, //user area
@@ -177,7 +181,7 @@ export const menu = {
             },
             {
                 "id": 3,
-                "name": "Chapati",
+                "name": "Combo Meal Tiffin",
                 "price": 90,
                 "vendor_id": 1,
                 "images": null,

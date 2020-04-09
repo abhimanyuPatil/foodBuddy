@@ -114,14 +114,14 @@ const Home = (props:IHome)  => {
   };
   const renderBanner = (data:{item:{image:any},index:number})=>{
     return (
-      <View style={{height:screenDimensions.height*.2,borderRadius:10,width:'100%'}}>
-        <Image style={{alignSelf:'center',height:screenDimensions.height*.2,borderRadius:10,width:'100%'}} resizeMode={'contain'} source={data.item.image} />
+      <View style={{height:screenDimensions.height*.2}}>
+        <ImageOverlay overlayAlpha={0.1} contentPosition='bottom'  height={screenDimensions.height*0.2} containerStyle={{width:'100%'}} source={data.item.image} />
       </View>
     )
   }
   const renderImages = (data:any)=>{
     return (
-      <View style={{flexDirection:'row',justifyContent:'space-between',height:screenDimensions.height*.18}}>
+      <View style={{flexDirection:'row',justifyContent:'space-between',height:screenDimensions.height*.18,marginTop:`${base}%`,}}>
         {
           data.item.map((slide,idx)=>{
             return (
@@ -150,14 +150,14 @@ const Home = (props:IHome)  => {
   return (
     <>
       <SafeAreaView style={{flex:1}}>
-        <ScrollView contentContainerStyle={{paddingHorizontal:`${small}%`}}>
+        <ScrollView contentContainerStyle={{}}>
           <View style={{marginTop:`${base}%`}}> 
             <Carousel
               data={banner}
               renderItem={data => renderBanner(data)}
               firstItem={0}
               sliderWidth={screenDimensions.width}
-              itemWidth={screenDimensions.width-100}
+              itemWidth={screenDimensions.width}
               inactiveSlideScale={0.8}
               inactiveSlideOpacity={0.4}
               swipeThreshold={0}
@@ -169,8 +169,9 @@ const Home = (props:IHome)  => {
               activeAnimationType={'spring'}
             />
           </View>
+          <View style={{paddingHorizontal:`${small}%`}}> 
           <MessCard cartItems={cartItems} activeMess={activeMess} theme={theme}  M={messList[0]}/>
-          <View style={{marginTop:`${base}%`}}> 
+
           <Carousel
             data={display}
             renderItem={data => renderImages(data)}
@@ -189,7 +190,7 @@ const Home = (props:IHome)  => {
             // onSnapToItem={index => setIndex(index)}
           />
           </View>
-          <FlatList showsVerticalScrollIndicator={false} keyExtractor={(item,i)=> `${i}`} data={messList} renderItem={({item,index})=>{return <MessCard activeMess={activeMess} cartItems={cartItems} theme={theme} M={item} key={index} />}} />
+          <FlatList contentContainerStyle={{paddingHorizontal:`${small}%`}} showsVerticalScrollIndicator={false} keyExtractor={(item,i)=> `${i}`} data={messList} renderItem={({item,index})=>{return item.type === 'Ad' ? <AdBanner /> : <MessCard activeMess={activeMess} cartItems={cartItems} theme={theme} M={item} key={index} />}} />
           {/* {
               cartItems.length > 0 && <Footer cartItems={cartItems} />
           } */}
@@ -269,5 +270,13 @@ const MessCard =(props:IMessCard)=>{
         <AppText type={['small','warning']}>40% Off - Use Code FOODBUDD</AppText>
     </View>
   </TouchableOpacity>
+  )
+}
+
+const AdBanner = () =>{
+  return (
+    <View>
+      <ImageOverlay overlayAlpha={0.1} contentPosition='bottom'  height={screenDimensions.height*0.2} containerStyle={{width:'100%'}} source={require('../assets/images/img1.jpg')} />
+    </View>
   )
 }

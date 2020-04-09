@@ -1,13 +1,14 @@
 import React from 'react';
-import { TextStyle, ViewStyle, View } from 'react-native';
-import { small, theme, IColour, tiny } from '../config/Theme';
+import { TextStyle, ViewStyle, View, ModalProps, Modal, TouchableOpacity, StyleProp, TouchableOpacityProps } from 'react-native';
+import { small, theme, IColour, tiny, large } from '../config/Theme';
 import { AppText } from './AppText';
-interface ILabel {
+interface ILabel extends TouchableOpacityProps {
   text: string;
   type?: keyof IColour;
   inverted?: boolean;
   textStyle?: TextStyle;
   ViewStyle?: ViewStyle;
+  rightIcon?:React.ReactElement
 }
 export const Label = (props: ILabel) => {
   const {
@@ -16,23 +17,27 @@ export const Label = (props: ILabel) => {
     inverted = false,
     textStyle = {},
     ViewStyle = {},
+    ...rest
   } = props;
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={1}
       style={[
         {
+          flexDirection:'row',
           paddingHorizontal: `${tiny}%`,
-          justifyContent: 'center',
+          justifyContent: 'space-between',
           alignContent: 'center',
           alignItems: 'center',
           backgroundColor: inverted ? '#fff' : theme.colors[type],
           borderWidth: inverted ? 0.8 : 0,
           borderColor: theme.colors[type],
-          height: 25,
-          borderRadius:4
+          height: 30,
+          borderRadius:4,
         },
         { ...ViewStyle },
-      ]}>
+      ]}
+      {...rest}>
       <AppText
         type={
           inverted
@@ -47,6 +52,55 @@ export const Label = (props: ILabel) => {
         ]}>
         {text}
       </AppText>
-    </View>
+      {props.rightIcon}
+    </TouchableOpacity>
+  );
+};
+
+// general purpose modal
+export const GeneralModal = (
+  props: Omit<ModalProps, 'onDismiss' | 'onRequestClose'> & {
+    children: React.ReactChild;
+    showModal: boolean;
+    containerStyle?: StyleProp<ViewStyle>;
+    toggleModal: (x: boolean) => void;
+  },
+) => {
+  const {
+    children,
+    showModal,
+    toggleModal,
+    containerStyle = {},
+    ...rest
+  } = props;
+
+  return (
+    <Modal
+      visible={showModal}
+      animationType="fade"
+      presentationStyle="overFullScreen"
+      transparent={true}
+      onDismiss={() => {
+        toggleModal(false);
+      }}
+      onRequestClose={() => {
+        toggleModal(false);
+      }}
+      {...rest}>
+      <TouchableOpacity
+        activeOpacity={1}
+        // onPress={() => toggleModal(false)}
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0,0,0,0.4)',
+          padding: `${large}%`,
+          justifyContent: 'center',
+          ...containerStyle,
+        }}>
+        {children}
+      </TouchableOpacity>
+    </Modal>
   );
 };
