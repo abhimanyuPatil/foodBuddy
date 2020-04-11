@@ -45,6 +45,13 @@ export const OffersIcon = (props:IconProps)=>{
     )
 }
 
+export const HeaderBack = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return (
+        <Icon name='arrow-back' type='material' size={props.size} color={props.color} {...rest}/>
+    )
+}
+
 export const ChevronDown = (props:IconProps)=>{
     const {size,color,...rest} = props
     return (

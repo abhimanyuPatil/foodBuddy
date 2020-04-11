@@ -9,13 +9,35 @@ import { GeneralModal, Label } from "../components/Label"
 import { CloseIcon, HomeIcon, HomeIconO, OfficeIconO, LocationIconO, OfficeIcon, LocationIcon } from "../utils/icons"
 import { Input } from "react-native-elements"
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { Fumi } from 'react-native-textinput-effects';
 import { ThemeButton } from "../components/Buttons"
 import {useForm,FormContext, Controller} from 'react-hook-form'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { specialCharacterValidator, notMoreThan10AnyNonAlphabeticalCharacter, checkForAlphabets } from "../utils/validators"
 import * as Yup from 'yup'
+import { useDispatch } from "react-redux"
+import { ADD_ADDRESS } from "../Redux/user/types"
+import { useNavigation } from "../hooks/useNavigation"
 const validationSchema = Yup.object().shape({
-    address:Yup.string()
+    address_line2:Yup.string()
+        .required('This field is required')
+        .test(
+        'special character test',
+        'This field cannot contain only special characters or numbers',
+        specialCharacterValidator,
+        )
+        .test(
+        'alphabets character test',
+        'This field should contain at least one alphabet',
+        checkForAlphabets,
+        )
+        .test(
+        'more special chars',
+        'Cannot contain more than 10 special characters',
+        notMoreThan10AnyNonAlphabeticalCharacter,
+        ),
+    landmark:Yup.string()
         .required('This field is required')
         .test(
         'special character test',
@@ -34,33 +56,62 @@ const validationSchema = Yup.object().shape({
         ),
     type:Yup.mixed().required('Please select address type').oneOf(['home','office','other'],'Please select one from the types')
 })
+export const AddAddressContainer = () =>{
+    const navigation = useNavigation()
+    return (
+        <AddAddress initialData={defaultAddressData} onSubmit={()=>navigation.navigate('ManageAddress')} />
+    )
+}
 const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
 const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
-export const AddAddress = ()=>{
+interface IAddAddress {
+    onSubmit:Function
+    initialData:{}
+}
+const defaultAddressData = {
+    address_line1:'',
+    address_line2:'',
+    landmark:'',
+    type:'home'
+}
+export const AddAddress = (props:IAddAddress)=>{
     const {heightPercentageToDP,widthPercentageToDP} = useResponsiveHelper()
     const [addressModal,toggleModal] = useState(false)
     const methods = useForm({
-        validationSchema:validationSchema
+        validationSchema:validationSchema,
+        defaultValues:{
+            ...defaultAddressData,
+            ...props.initialData
+        }
     })
     const [type,setType]=useState('home')
+    const navigation = useNavigation()
     console.log(methods.watch())
     console.log(methods.errors)
+    const dispatch = useDispatch()
     React.useEffect(()=>{
         methods.register('type')
         methods.setValue('type',type)
     },[])
-    const onSubmit = (data:any)=>{}
+    const onSubmit = (data:any)=>{
+        console.log('d',data)
+        dispatch({
+            type:ADD_ADDRESS,
+            payload:{...data,address_line1:'Kothrud, Pune'}
+        })
+        return props.onSubmit()
+    }
     const changeType = (type:string)=>{
         setType(type)
         methods.setValue('type',type)
     }
     return (
-        <KeyboardAvoidingView style={{flex:1}}>
+        <KeyboardAwareScrollView style={{flex:1}}>
         <View style={{flex:1,backgroundColor:'#fff',justifyContent:'space-between'}}>
-            <View style={{height:heightPercentageToDP(50),backgroundColor:'grey'}}>
+            <View style={{height:heightPercentageToDP(40),backgroundColor:'grey'}}>
                 <AppText type={['center']}>Map with current location will be shown here</AppText>
             </View>
-            <View style={{paddingHorizontal:`${small}%`,}}>
+            <View style={{paddingHorizontal:`${small}%`,height:heightPercentageToDP(43)}}>
                 <AppText>Your Location</AppText>
                 <View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:0.8,paddingBottom:`${small}%`,marginVertical:`${small}%`,borderColor:'#ddd'}}>
                     <AppText>Kothrud, Pune</AppText>
@@ -78,16 +129,39 @@ export const AddAddress = ()=>{
                                     iconColor={'#f95a25'}
                                     iconSize={20}
                                     iconWidth={40}
-                                    inputPadding={16}
+                                    inputPadding={12}
+                                    inputStyle={{color:'#111',fontSize:16,borderBottomWidth:0.8}}
                                 />                                
                         }
                         control={methods.control}
-                        name="address"
+                        name="address_line2"
                         onChange={args => args[0].nativeEvent.text}
                         rules={{ required: true }}
                         defaultValue=""
                     />
-                    <AppText type={['small','validationError']}>{methods?.errors?.address?.message}</AppText>
+                    <AppText type={['small','validationError']}>{methods?.errors?.address_line2?.message}</AppText>
+
+                    <Controller
+                        as={
+                                <Fumi
+                                    label={'Landmark*'}
+                                    iconClass={MaterialIcons}
+                                    iconName={'my-location'}
+                                    iconColor={'#f95a25'}
+                                    iconSize={20}
+                                    iconWidth={40}
+                                    inputPadding={12}
+                                    inputStyle={{color:'#111',fontSize:16,borderBottomWidth:0.8}}
+                                />                                
+                        }
+                        control={methods.control}
+                        name="landmark"
+                        onChange={args => args[0].nativeEvent.text}
+                        rules={{ required: true }}
+                        defaultValue=""
+                    />
+                    <AppText type={['small','validationError']}>{methods?.errors?.landmark?.message}</AppText>
+
                     <AppText>Save Address as</AppText>
                     <View style={{flexDirection:'row',justifyContent:'space-evenly',marginTop:`${small}%`}}>
                         <Label onPress={()=>changeType('home')} inverted={type!=='home'} type={'success'} text='Home' rightIcon={type ==='home' ? <HomeIcon size={14} color={'#fff'}/> : <HomeIconO size={14} color={theme.colors.success} />} />
@@ -98,8 +172,11 @@ export const AddAddress = ()=>{
                 
                 
             </View>
-            <ThemeButton onPress={methods.handleSubmit(onSubmit)} title={'Save Address'} containerStyle={{width:'100%'}} />
-            <Modal
+
+        </View>
+        <ThemeButton onPress={methods.handleSubmit(onSubmit)} title={'Save Address'} containerStyle={{width:'100%'}} />
+
+        <Modal
                 visible={addressModal}
                 animationType="fade"
                 presentationStyle="overFullScreen"
@@ -187,8 +264,7 @@ export const AddAddress = ()=>{
                         />
                 </View>
             </Modal>
-        </View>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     )
 }
 const styles = StyleSheet.create({

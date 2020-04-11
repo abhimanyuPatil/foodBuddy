@@ -13,6 +13,8 @@ import { addToCart } from '../Redux/cart/actions';
 import { OffersIcon, ChevronDown, ChevronLeft } from '../utils/icons';
 import { rupee } from '../config/constants';
 import { Divider } from 'react-native-elements';
+import { useNavigation } from '../hooks/useNavigation';
+import { SET_PATH } from '../Redux/cart/types';
 const window = Dimensions.get('window')
 interface ICart{
   cartItems:PickKey<ICartReducer,'cartItems'>
@@ -27,6 +29,8 @@ if (Platform.OS === 'android') {
 const Cart = (props:ICart)  => {
   const {activeMess,cartItems} = props
   const [count,setCount] = useState(0)
+  const {navigate} = useNavigation()
+  const dispatch = useDispatch()
     React.useEffect(()=>{
         const quants = cartItems.map(C=>C.quantity*C.price)
         const number = quants.reduce((a, b) => a + b, 0)
@@ -62,7 +66,7 @@ const Cart = (props:ICart)  => {
                   })
                 }
               </View>
-              <TouchableOpacity style={{marginVertical:`${small}%`,backgroundColor:'#fff',flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingHorizontal:`${small}%`}}>
+              <TouchableOpacity onPress={()=>{navigate('OFFERS',{through:'Cart'});dispatch({type:SET_PATH,payload:'Cart'})}} style={{marginVertical:`${small}%`,backgroundColor:'#fff',flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingHorizontal:`${small}%`}}>
                 <View style={{flexDirection:'row',alignItems:'center',marginVertical:`${small}%`}}>
                   <OffersIcon color={'#121122'} size={24} />
                   <AppText>  APPLY COUPONS</AppText>

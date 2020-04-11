@@ -12,10 +12,11 @@ import { AccountIcon, CartIcon, HomeIcon, OffersIcon } from '../utils/icons';
 import { Booking } from '../screens/Booking';
 import { Menu } from '../components/Menu';
 import {createDrawerNavigator} from 'react-navigation-drawer';
-import { Offers } from '../screens/Offers';
+import Offers  from '../screens/Offers';
 import { More } from '../screens/More';
 import ManageAddress from '../screens/ManageAddress';
-import { AddAddress } from '../screens/AddAddress';
+import { AddAddress, AddAddressContainer } from '../screens/AddAddress';
+import { CommonHeader } from '../components/CommonHeader';
 
 export const TabNames = {
   home:'HOME',
@@ -54,16 +55,12 @@ const BottomTabs = createMaterialBottomTabNavigator(
       {
         Offers:{
           screen:Offers,
-          navigationOptions:()=>({
-            headerShown:false
+          navigationOptions:navigation=>({
+            header:()=> <CommonHeader title='OFFERS' {...navigation} />,
+            title:'OFFERS'
           })
         }
       },
-      {
-        navigationOptions:()=>({
-          headerShown:false
-        })
-      }
     ),
     [TabNames.cart]:createStackNavigator(
       {
@@ -85,12 +82,13 @@ const BottomTabs = createMaterialBottomTabNavigator(
         },
         ManageAddress:{
           screen:ManageAddress,
-          navigationOptions:()=>({
-            headerShown:false
+          navigationOptions:navigation=>({
+            header:()=> <CommonHeader title={'Manage Address'} {...navigation} />,
+            title:'Manage Address'
           })
         },
         AddAddress:{
-          screen:AddAddress,
+          screen:AddAddressContainer,
           navigationOptions:()=>({
             headerShown:false
           })

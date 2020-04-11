@@ -25,6 +25,7 @@
     "react-native-gesture-handler": "^1.6.0",
     "react-native-google-places-autocomplete": "^1.4.1",
     "react-native-image-overlay": "^0.1.2",
+    "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-paper": "^3.6.0",
     "react-native-phone-input": "^0.2.4",

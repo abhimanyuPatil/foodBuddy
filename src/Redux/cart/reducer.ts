@@ -1,10 +1,13 @@
-import { ADD_TO_CART, EMPTY_CART } from "./types";
+import { ADD_TO_CART, EMPTY_CART, SET_PATH } from "./types";
 
 export interface ICartReducer {
-    cartItems : {menuID:number,quantity:number}[]
+    cartItems : {menuID:number,quantity:number}[],
+    through:string
+
 }
 const initialCart:ICartReducer = {
-    cartItems:[]
+    cartItems:[],
+    through:''
 }
 export default (
     state: ICartReducer = initialCart,
@@ -20,6 +23,11 @@ export default (
         return {
           ...state,
           cartItems:[]
+        }
+      case SET_PATH:
+        return {
+          ...state,
+          through:payload
         }
       default:
         return state;

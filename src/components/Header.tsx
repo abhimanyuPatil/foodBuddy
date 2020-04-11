@@ -1,6 +1,6 @@
 import React from 'react'
 import { SafeAreaView } from 'react-navigation'
-import { Header, Icon } from 'react-native-elements'
+import { Header, Icon, Avatar } from 'react-native-elements'
 import { TouchableOpacity, Dimensions, StyleSheet } from 'react-native'
 import { AppText } from './AppText'
 import { withTheme } from 'react-native-paper'
@@ -27,7 +27,13 @@ const HeaderBar = (props:IHeader)=>{
             }      
             rightComponent={
                 <TouchableOpacity>
-                    <Icon name='notifications-none' color={props.theme.colors.theme} size={22} />
+                    <Avatar
+                        rounded
+                        source={{
+                            uri:
+                            'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+                        }}
+                        />
                 </TouchableOpacity>
             }
             />

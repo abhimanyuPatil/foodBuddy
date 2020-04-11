@@ -1,1 +1,2 @@
 export const SET_LOCATION = 'SET_LOCATION'
+export const ADD_ADDRESS = 'ADD_ADDRESS'

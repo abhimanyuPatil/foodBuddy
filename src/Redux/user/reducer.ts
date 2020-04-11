@@ -1,4 +1,4 @@
-import { SET_LOCATION } from "./types";
+import { SET_LOCATION, ADD_ADDRESS } from "./types";
 
 export interface IUser {
     token:string|null
@@ -6,7 +6,7 @@ export interface IUser {
     userName:string
     profilePhoto:string|null
     areaId:number
-    address:{type:'home' | 'other' | 'office',address:string,areadId:number,pincode:string}[]
+    address:{type:'home' | 'other' | 'office',address_line1:string,address_line2:string,landmark:string}[]
 }
 const initialValues:IUser = {
     token:'',
@@ -25,6 +25,11 @@ export default (
         return {
           ...state,
           location:payload
+        }
+      case ADD_ADDRESS:
+        return {
+          ...state,
+          address:[payload,...state.address]
         }
       default:
         return state;
