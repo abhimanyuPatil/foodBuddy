@@ -22,7 +22,7 @@ export const TabNames = {
   home:'HOME',
   offers:"OFFERS",
   cart:'CART',
-  more:'MORE'
+  more:'PROFILE'
 }
 const BottomTabs = createMaterialBottomTabNavigator(
   {
@@ -96,6 +96,19 @@ const BottomTabs = createMaterialBottomTabNavigator(
       },
       {
         // initialRouteName:'AddAddress'
+        navigationOptions: ({navigation}) => {
+          let tabBarVisible = true;
+          if (navigation.state.routes.length > 1) {
+            navigation.state.routes.map(route => {
+              if (route.routeName === 'AddAddress') {
+                tabBarVisible = false;
+              }
+            });
+          }
+          return {
+            tabBarVisible,
+          };
+        },
       }
     ),
   },

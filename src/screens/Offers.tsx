@@ -7,6 +7,7 @@ import { Divider, Input } from "react-native-elements"
 import { useNavigation } from "../hooks/useNavigation"
 import { connect } from "react-redux"
 import { IStore } from "../Redux/store"
+import { ThemeButton } from "../components/Buttons"
 interface IOffers{
     through:string
 }
@@ -18,7 +19,7 @@ const Offers = (props:IOffers)=>{
             {
                 coupons.map((c,idx)=>{
                     return (
-                        <CoupanCard {...c} index={idx} key={idx} />
+                        <CoupanCard through={props.through} {...c} index={idx} key={idx} />
                     )
                 })                
 
@@ -48,14 +49,19 @@ interface ICouponCard{
     code : string
     title:string
     desc:string
+    through:string
 }
 const CoupanCard = (props:ICouponCard)=>{
     return (
         <View style={{paddingHorizontal:`${base}%`,borderBottomWidth:0.8,paddingVertical:`${small}%`,backgroundColor:'#fff',borderStyle:'dotted',borderRadius:1}}>
-            <View style={{borderWidth:1,borderRadius:1,borderStyle:'dashed',backgroundColor:'#f7dc71',flexDirection:'row',alignItems:'center',width:'25%',paddingHorizontal:`${tiny}%`,justifyContent:'space-between',height:30}}>
-                <OffersIcon size={18} color={theme.colors.theme} />
-                <AppText type={['bold','small']}>{props.code}</AppText>
+            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                <View style={{borderWidth:1,borderRadius:1,borderStyle:'dashed',backgroundColor:'#f7dc71',flexDirection:'row',alignItems:'center',width:'25%',paddingHorizontal:`${tiny}%`,justifyContent:'space-between',height:30}}>
+                    <OffersIcon size={18} color={theme.colors.theme} />
+                    <AppText type={['bold','small']}>{props.code}</AppText>
+                </View>
+                {props.through==='Cart' && <ThemeButton buttonStyle={{height:30,backgroundColor:theme.colors.success}} containerStyle={{width:'20%',height:30}} title='Apply' />}
             </View>
+            
             <AppText type={['bold']} style={{marginTop:`${small}%`}}>
                 {props.title}
             </AppText>

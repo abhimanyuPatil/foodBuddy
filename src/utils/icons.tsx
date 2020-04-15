@@ -143,3 +143,8 @@ export const OfficeIconO = (props:IconProps)=>{
     const {size,color,...rest} = props
     return <Icon name='building-o' type='font-awesome'  size={props.size} color={props.color}  {...rest}/>
 }
+
+export const HistoryIcon = (props:IconProps)=>{
+    const {size,color,...rest} = props
+    return <Icon name='history' type='material-community'  size={props.size} color={props.color}  {...rest}/>
+}

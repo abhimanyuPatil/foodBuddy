@@ -75,7 +75,6 @@ const defaultAddressData = {
     type:'home'
 }
 export const AddAddress = (props:IAddAddress)=>{
-    const {heightPercentageToDP,widthPercentageToDP} = useResponsiveHelper()
     const [addressModal,toggleModal] = useState(false)
     const methods = useForm({
         validationSchema:validationSchema,
@@ -87,7 +86,7 @@ export const AddAddress = (props:IAddAddress)=>{
     const [type,setType]=useState('home')
     const navigation = useNavigation()
     console.log(methods.watch())
-    console.log(methods.errors)
+    console.log('err',methods.errors)
     const dispatch = useDispatch()
     React.useEffect(()=>{
         methods.register('type')
@@ -106,12 +105,12 @@ export const AddAddress = (props:IAddAddress)=>{
         methods.setValue('type',type)
     }
     return (
-        <KeyboardAwareScrollView style={{flex:1}}>
-        <View style={{flex:1,backgroundColor:'#fff',justifyContent:'space-between'}}>
-            <View style={{height:heightPercentageToDP(40),backgroundColor:'grey'}}>
-                <AppText type={['center']}>Map with current location will be shown here</AppText>
+        <>
+        <View style={{flex:1,justifyContent:'space-between',}}>
+            <View style={{flex:1}}>
+                <AppText>Map with current location will be shown here</AppText>
             </View>
-            <View style={{paddingHorizontal:`${small}%`,height:heightPercentageToDP(43)}}>
+            <View style={{paddingHorizontal:`${small}%`,flex:1,backgroundColor:'#fff'}}>
                 <AppText>Your Location</AppText>
                 <View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:0.8,paddingBottom:`${small}%`,marginVertical:`${small}%`,borderColor:'#ddd'}}>
                     <AppText>Kothrud, Pune</AppText>
@@ -175,98 +174,11 @@ export const AddAddress = (props:IAddAddress)=>{
 
         </View>
         <ThemeButton onPress={methods.handleSubmit(onSubmit)} title={'Save Address'} containerStyle={{width:'100%'}} />
-
-        <Modal
-                visible={addressModal}
-                animationType="fade"
-                presentationStyle="overFullScreen"
-                transparent={true}
-                onDismiss={() => {
-                    toggleModal(false);
-                }}
-                onRequestClose={() => {
-                    toggleModal(false);
-                }}>
-                <TouchableOpacity activeOpacity={1} onPress={()=>toggleModal(false)} style={{height:heightPercentageToDP(30)}}></TouchableOpacity>
-                <View style={[styles.topContainer,{height:heightPercentageToDP(70)}]}>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-                        <AppText type={['bold','large']}>Search Location</AppText>
-                        <TouchableOpacity onPress={()=>{console.log('pressed');toggleModal(false)}}>
-                            <CloseIcon size={22} color={'#111'}  />
-                        </TouchableOpacity>
-                    </View>
-                    <GooglePlacesAutocomplete
-                        placeholder='Search'
-                        minLength={2} // minimum length of text to search
-                        autoFocus={false}
-                        returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                        keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
-                        listViewDisplayed='auto'    // true/false/undefined
-                        fetchDetails={true}
-                        renderDescription={row => row.description} // custom description render
-                        onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                            console.log(data, details);
-                        }}
-
-                        getDefaultValue={() => ''}
-
-                        query={{
-                            // available options: https://developers.google.com/places/web-service/autocomplete
-                            key: 'YOUR API KEY',
-                            language: 'en', // language of the results
-                            types: '(cities)' // default: 'geocode'
-                        }}
-
-                        styles={{
-                            textInputContainer: {
-                              backgroundColor: 'rgba(0,0,0,0)',
-                              borderTopWidth: 0,
-                              borderBottomWidth:0,
-                            //   borderWidth:0.6,
-                              elevation:0
-                            },
-                            textInput: {
-                              marginLeft: 0,
-                              marginRight: 0,
-                              height: 38,
-                              color: '#5d5d5d',
-                              fontSize: 16,
-                              borderWidth:0.6,
-                            },
-                            predefinedPlacesDescription: {
-                              color: '#1faadb'
-                            },
-                          }}
-
-                        currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                        currentLocationLabel="Current location"
-                        nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                        GoogleReverseGeocodingQuery={{
-                            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                        }}
-                        GooglePlacesSearchQuery={{
-                            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                            rankby: 'distance',
-                            type: 'cafe'
-                        }}
-                        
-                        GooglePlacesDetailsQuery={{
-                            // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
-                            fields: 'formatted_address',
-                        }}
-
-                        filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                        predefinedPlaces={[homePlace, workPlace]}
-
-                        debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-                        // renderLeftButton={()  => <Image source={require('path/custom/left-icon')} />}
-                        // renderRightButton={() => <Text>Custom text after the input</Text>}
-                        />
-                </View>
-            </Modal>
-        </KeyboardAwareScrollView>
+        <LocationModal closeModal={()=>toggleModal(false)} visible={addressModal} />              
+</>
     )
 }
+
 const styles = StyleSheet.create({
 
     topContainer: {
@@ -296,4 +208,99 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
     },
   });
-  
+const LocationModal = (props:any)=>{
+    const {heightPercentageToDP,widthPercentageToDP} = useResponsiveHelper()
+
+    return (
+        <Modal
+        visible={props.visible}
+        animationType="fade"
+        presentationStyle="overFullScreen"
+        transparent={true}
+        onDismiss={() => {
+            return props.closeModal()
+            // toggleModal(false);
+        }}
+        onRequestClose={() => {
+            // toggleModal(false);
+            return props.closeModal()
+        }}>
+        <TouchableOpacity activeOpacity={1} onPress={()=>{return props.closeModal()}} style={{height:heightPercentageToDP(30)}}></TouchableOpacity>
+        <View style={[styles.topContainer,{height:heightPercentageToDP(70)}]}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+                <AppText type={['bold','large']}>Search Location</AppText>
+                <TouchableOpacity onPress={()=>{console.log('pressed');return props.closeModal()}}>
+                    <CloseIcon size={22} color={'#111'}  />
+                </TouchableOpacity>
+            </View>
+            <GooglePlacesAutocomplete
+                placeholder='Search'
+                minLength={2} // minimum length of text to search
+                autoFocus={false}
+                returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+                keyboardAppearance={'light'} // Can be left out for default keyboardAppearance https://facebook.github.io/react-native/docs/textinput.html#keyboardappearance
+                listViewDisplayed='auto'    // true/false/undefined
+                fetchDetails={true}
+                renderDescription={row => row.description} // custom description render
+                onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                    console.log(data, details);
+                }}
+      
+                getDefaultValue={() => ''}
+      
+                query={{
+                    // available options: https://developers.google.com/places/web-service/autocomplete
+                    key: 'YOUR API KEY',
+                    language: 'en', // language of the results
+                    types: '(cities)' // default: 'geocode'
+                }}
+      
+                styles={{
+                    textInputContainer: {
+                      backgroundColor: 'rgba(0,0,0,0)',
+                      borderTopWidth: 0,
+                      borderBottomWidth:0,
+                    //   borderWidth:0.6,
+                      elevation:0
+                    },
+                    textInput: {
+                      marginLeft: 0,
+                      marginRight: 0,
+                      height: 38,
+                      color: '#5d5d5d',
+                      fontSize: 16,
+                      borderWidth:0.6,
+                    },
+                    predefinedPlacesDescription: {
+                      color: '#1faadb'
+                    },
+                  }}
+      
+                currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+                currentLocationLabel="Current location"
+                nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                GoogleReverseGeocodingQuery={{
+                    // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                }}
+                GooglePlacesSearchQuery={{
+                    // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                    rankby: 'distance',
+                    type: 'cafe'
+                }}
+                
+                GooglePlacesDetailsQuery={{
+                    // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
+                    fields: 'formatted_address',
+                }}
+      
+                filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                predefinedPlaces={[homePlace, workPlace]}
+      
+                debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+                // renderLeftButton={()  => <Image source={require('path/custom/left-icon')} />}
+                // renderRightButton={() => <Text>Custom text after the input</Text>}
+                />
+        </View>
+      </Modal>
+    )
+}
